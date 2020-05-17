@@ -1,0 +1,8 @@
+
+fieldset&Saturday Luncheon
+item&Sandwich Buffet&23&Sliced Meats and cheeses, Lettuce, Sliced Tomatoes and Onions, Pickles with Assorted Rolls and Breads, Pasta Salad, Potato Salad and Home-Made Potato Chips Brownies and Blondies, Coffee, Tea, Decaf Coffee & Iced Tea Stations
+fieldset&Saturday Banquet
+item&Beef Medallions & Mushrooms w/ Gravy over Garlic Mashed Potatoes&37&
+item&Seafood Newburg over Garlic Mashed Potatoes&36&(Scallops, Crab & Shrimp in a Sherry Cream Sauce)
+item&Vegetarian / Gluten Free Vegetable Stir-Fry served over Rice&27&
+item&Children: Chicken Tender Platter with French Fries&14&

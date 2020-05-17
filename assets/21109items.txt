@@ -1,0 +1,15 @@
+fieldset&Activities
+item&Activity Fee&5& (Required per person except children 12 and under-free)&
+Covers all fees
+fieldset&FRIDAY Activities 
+item&Golf Tournament&25&(Greens Fee & Cart)&
+item&Tangier Island Cruise&27&(1200-1700/Lunch on your own)&	
+fieldset&SATURDAY 
+item&Saturday Night BBQ - Adult&25& BUFFET&
+item&Saturday Night BBQ - Child&15& BUFFET&
+text&BBQ Pork Ribs, BBQ Chicken, 
+1/4 Lb. Angus Hamburgers
+On buns, Baked Beans, 
+Sweet Corn on the Cob, Cole Slaw, 
+Assorted Cakes, Iced Tea, Bottled Water
+

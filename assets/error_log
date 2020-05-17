@@ -1,0 +1,73 @@
+[12-Sep-2019 18:25:20 America/New_York] PHP Warning:  session_start(): Failed to read session data: user (path: /opt/alt/php72/var/lib/php/session) in /home/uspsd5/public_html/libraries/joomla/session/handler/native.php on line 260
+[12-Sep-2019 18:25:20 America/New_York] PHP Warning:  session_start(): Failed to read session data: user (path: /opt/alt/php72/var/lib/php/session) in /home/uspsd5/public_html/libraries/joomla/session/handler/native.php on line 260
+[12-Sep-2019 18:25:25 America/New_York] PHP Warning:  session_start(): Failed to read session data: user (path: /opt/alt/php72/var/lib/php/session) in /home/uspsd5/public_html/libraries/joomla/session/handler/native.php on line 260
+[02-Oct-2019 13:55:07 America/New_York] PHP Notice:  Undefined index: Registration in /home/uspsd5/public_html/modules/mod_events/assets/register_gen.php on line 128
+[20-Oct-2019 08:46:09 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[22-Oct-2019 01:15:51 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[23-Oct-2019 04:08:17 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[26-Oct-2019 22:47:17 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[04-Nov-2019 07:36:18 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[05-Nov-2019 22:54:56 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[05-Nov-2019 22:55:13 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[05-Nov-2019 22:58:22 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[06-Nov-2019 03:31:26 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[06-Nov-2019 03:32:43 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[07-Nov-2019 00:16:02 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[07-Nov-2019 10:33:00 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[07-Nov-2019 13:43:25 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[08-Nov-2019 11:47:22 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[09-Nov-2019 11:13:03 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[09-Nov-2019 13:04:19 America/New_York] PHP Warning:  session_start(): Failed to read session data: user (path: /opt/alt/php72/var/lib/php/session) in /home/uspsd5/public_html/libraries/joomla/session/handler/native.php on line 260
+[09-Nov-2019 13:04:22 America/New_York] PHP Warning:  session_start(): Failed to read session data: user (path: /opt/alt/php72/var/lib/php/session) in /home/uspsd5/public_html/libraries/joomla/session/handler/native.php on line 260
+[09-Nov-2019 13:04:23 America/New_York] PHP Warning:  session_start(): Failed to read session data: user (path: /opt/alt/php72/var/lib/php/session) in /home/uspsd5/public_html/libraries/joomla/session/handler/native.php on line 260
+[09-Nov-2019 13:04:23 America/New_York] PHP Warning:  session_start(): Failed to read session data: user (path: /opt/alt/php72/var/lib/php/session) in /home/uspsd5/public_html/libraries/joomla/session/handler/native.php on line 260
+[09-Nov-2019 13:06:52 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[10-Nov-2019 06:51:45 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[11-Nov-2019 21:32:39 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[11-Nov-2019 21:34:45 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[11-Nov-2019 22:50:01 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[11-Nov-2019 22:50:10 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[11-Nov-2019 22:50:13 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[11-Nov-2019 22:50:17 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[12-Nov-2019 00:12:48 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[12-Nov-2019 01:56:25 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[12-Nov-2019 02:07:58 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[12-Nov-2019 04:16:33 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[12-Nov-2019 04:32:00 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[12-Nov-2019 04:54:38 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[14-Nov-2019 21:45:17 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[15-Nov-2019 11:51:21 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[15-Nov-2019 11:51:59 America/New_York] PHP Warning:  session_start(): Failed to read session data: user (path: /opt/alt/php72/var/lib/php/session) in /home/uspsd5/public_html/libraries/joomla/session/handler/native.php on line 260
+[15-Nov-2019 11:51:59 America/New_York] PHP Warning:  session_start(): Failed to read session data: user (path: /opt/alt/php72/var/lib/php/session) in /home/uspsd5/public_html/libraries/joomla/session/handler/native.php on line 260
+[15-Nov-2019 18:42:24 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[15-Nov-2019 20:39:15 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[15-Nov-2019 20:39:16 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[15-Nov-2019 20:39:20 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[15-Nov-2019 20:39:20 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[15-Nov-2019 20:39:36 America/New_York] PHP Warning:  mysqli::query(): (23000/1062): Duplicate entry '!~!ABC145ZQ62DWQAFPOIYCFD!~!1' for key 'group_key' in /home/uspsd5/public_html/libraries/usps/connectMysqliDatabase.php on line 30
+[15-Nov-2019 20:39:38 America/New_York] PHP Warning:  mysqli::query(): (23000/1062): Duplicate entry '!~!ABC145ZQ62DWQAFPOIYCFD!~!1' for key 'group_key' in /home/uspsd5/public_html/libraries/usps/connectMysqliDatabase.php on line 30
+[15-Nov-2019 20:39:40 America/New_York] PHP Warning:  mysqli::query(): (23000/1062): Duplicate entry '!~!5.6.45-cll-lve!~!1' for key 'group_key' in /home/uspsd5/public_html/libraries/usps/connectMysqliDatabase.php on line 30
+[15-Nov-2019 20:39:41 America/New_York] PHP Warning:  mysqli::query(): (23000/1062): Duplicate entry '!~!5.6.45-cll-lve!~!1' for key 'group_key' in /home/uspsd5/public_html/libraries/usps/connectMysqliDatabase.php on line 30
+[15-Nov-2019 20:39:42 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[15-Nov-2019 20:39:42 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[15-Nov-2019 20:39:43 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[15-Nov-2019 20:39:43 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[15-Nov-2019 20:39:44 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[15-Nov-2019 20:39:44 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[15-Nov-2019 20:39:44 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[15-Nov-2019 20:39:45 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[15-Nov-2019 20:39:45 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[15-Nov-2019 20:39:45 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[15-Nov-2019 20:39:46 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[15-Nov-2019 20:39:46 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[15-Nov-2019 20:39:47 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[15-Nov-2019 20:39:47 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[15-Nov-2019 20:39:48 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[15-Nov-2019 20:39:48 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[15-Nov-2019 20:39:49 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[15-Nov-2019 20:39:50 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[15-Nov-2019 20:39:51 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[15-Nov-2019 20:39:51 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[15-Nov-2019 20:39:52 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[16-Nov-2019 10:22:15 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /home/uspsd5/public_html/modules/mod_events/assets/event_gen.php on line 91
+[16-Nov-2019 10:22:39 America/New_York] PHP Warning:  session_start(): Failed to read session data: user (path: /opt/alt/php72/var/lib/php/session) in /home/uspsd5/public_html/libraries/joomla/session/handler/native.php on line 260

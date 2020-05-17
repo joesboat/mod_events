@@ -1,0 +1,12 @@
+
+fieldset&Friday Meals 
+item&Continental Breakfast&10&Coffee, Tea, Juices, Pastries, Muffins.&F Brk&
+item&Boxed Lunch - Turkey Sandwich&20&Chips, Fruit, Cookies,Soda or Bottled Water&BL Tky&
+item&Boxed Lunch - Ham Sandwich&20&Chips, Fruit, Cookies,Soda or Bottled Water&BL Ham$
+item&Boxed Lunch - Veggie Wrap)&20&Chips, Fruit, Cookies,Soda or Bottled Water&BL Veg&
+fieldset&Saturday Meals
+item&Continental Breakfast&10&Coffee, Tea, Juices, Pastries, Muffins.&S Brk$
+item&Saturday Luncheon Buffet&26&Italian Buffet (Caesar Salad, Stuffed Shells w/Marinara Sauce, Linguini w/Alfredo Sauce, Mediterranean Style Grilled Chicken, Garlic Bread, Fresh Vegetable Medley, Chef’s Selection of Desserts, Coffee, Tea, Iced Tea&S Lch&
+item&Saturday Awards Banquet&36&Admiral Buffet:  Carved Top Round of Beef, Grilled Salmon, Oven Roasted Potatoes, Fresh Vegetable Medley, Chef’s Selection of Desserts, Coffee, Tea, Iced Tea&S Bqt&
+fieldset&Sunday Meals
+item&Continental Breakfast with Scrambled Eggs/Bacon&15&Eggs,Bacon,Coffee, Tea, Juices, Pastries, Muffins&Sun Brk&

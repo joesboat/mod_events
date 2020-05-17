@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="module" version="3.4" client="site" method="upgrade">
+	<name>Events and Awards</name>
+	<author>Joseph P. (Joe) Gibson</author>
+	<creationDate>June 2018</creationDate>
+	<copyright>Copyright (C) 2018 Joseph P. Gibson. All rights reserved.</copyright>
+	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+	<authorEmail>joe@joesboat.org</authorEmail>
+	<authorUrl>www.joesboat.org</authorUrl>
+	<version>1.0</version>
+	<description>‘Events and Awards’:  Tools to support the full life cycle of a major District 5 or Squadron meeting.  Termed an ‘Event’, it can be a conference, governing board, executive committee meeting, training class, change of watch, or rendezvous.  To be considered an ‘Event’ there must be a defined start date and time, end date and time, and a designated member responsible for meeting organization and agenda. 
+	</description>
+	<files>
+		<filename module="mod_events">mod_events.php</filename>
+		<filename>index.html</filename>
+		<filename>helper.php</filename>
+		<folder>tmpl</folder>
+		<folder>assets</folder>
+	</files>
+	<config>
+		<fields name="params">
+			<fieldset name="debug" label="Debug Controls">
+	        	<field 	name="siteLog"
+	        			type="list"
+	        			default="0"
+	        			label="Activate Logging"
+	        			description="Set to True to activate logging in module routines." >
+	        		<option value="1">True</option>
+	        		<option value="0">False</option>
+				</field>
+	        	<field 	name="siteDump"
+	        			type="list"
+	        			default="0"
+	        			label="Activate JDump"
+	        			description="Set to True to activate calling the extension 'JDump' routines." >
+	        		<option value="1">True</option>
+	        		<option value="0">False</option>
+				</field>
+			</fieldset>			
+			<fieldset name="source" label="Data Source">
+				<field name="dbsource"
+					type="radio"
+					label="Database Source"
+					description="Choose a local or remote database."
+					default="local"
+				>
+					<option value="local">Local Database</option>
+					<option value="remote">Remote Database</option>
+				</field>
+				<field
+					name="ipaddr"
+					type="text"
+					label="Database System IP Address"
+					description="Specify the IP address of the source database.  That system must be configured to accept MySql statements from this host."
+					default="0,0,0,0"
+				/>
+			</fieldset>
+			<fieldset name="orgsre" label="Module Function" 
+				description="Identifies the purpose of the module.  Maintenance allows generation of a customized form to enter new or modify existing entries.  Display allows selection of specific types of events for display to the public.  Both types work in cooperation with the 'Alternative Layout' control in the Advanced tab."
+			>
+				<field 
+					name="modtype"
+					type="radio"
+					label="Type of display"
+					description="Maintenance or Display.  Determines the type database searches needed."  
+					default="event"
+				>
+					<option value="event">Event Maintenance.  Officers Only.  Can call the form to update an event. </option>
+					<option value="event_list">Event List.  Use the Advanced Tab's 'Alternative Layout' field to specify the format of the list.  </option>
+					<option value="event_sort">Event List - Sortable</option>
+					<option value="event_show">Event Display</option>
+					<option value="event_documents">Display Documents</option>
+					<option value="award">Award Maintenance.  Officers Only.  Can call the form to update an award. </option>
+					<option value="award_list">Award List.  Use the Advanced Tab's 'Alternative Layout' field to specify the format of the list.  </option>
+					<option value="award_show">Award Display</option>
+					<option value="history">History Maintenance.  Officers only.  Allows user to enter or update a Hostorical Object.</option>
+				</field>
+				<field
+					name="orgType"
+					type="radio"
+					label="Organizaton Type"
+					description="Squadron or District and how the identity is determined."
+					eefault="dist"
+				>
+					<option value='dist'>District from Text Box</option>
+					<option value='squad'>Squadron from Text Box</option>
+					<option value="mbrsquad">Squadron from Member Certificate</option>
+					<option value="squad_no">Squadron from Parameter</option>
+					<option value="any">Any Squadron</option>
+				</field>
+				<field
+					name="display_alias"
+					type="text"
+					label="Display Menu Item Alias."
+					description="Identifies the Menu Item that will be called from an item in the list. Field is needed when the 'Type of display(modtype)' field is set to an Event or Award List. Field should contain the menu-item alias of the desired Menu Item! It will become an element in the generated url. "
+					default="squadron-award"
+				/>
+				<field
+					name="distnum"
+					type="text"
+					label="District Number"
+					description="District Number"
+					default="5"
+				/>
+				<field
+					name="sqdcode"
+					type = "text"
+					label="Squadron Account Number"
+					description="Squadron Acccount Code"
+					default="4785"
+				/>
+				<field
+					name='scope'
+					type="list"
+					label="Limits on items returned."
+					description="Establishes a limit on the items listed.  Typically set to 'future' for event maintenance.  'All' will return everything."
+					default = "future"
+				>
+					<option value='all'>All Events, Awards or Objects</option>
+					<option value='future'>Only Future Events, Awards or Objects</option>
+				</field>
+			</fieldset>
+			<fieldset name="evt" label="Events">
+				<field 
+					name="type"
+					type="checkboxes"
+					label="Event Type"
+					description="Select the event types to be displayed."
+				>	
+					<option value="all">All Events</option>
+					<option value="allmtg">All Meeting Events</option>
+					<option value="alltng">All Training Events</option>
+					<option value=""></option>
+					<option value="conf">Conference</option>
+					<option value="boat">Boat Show</option>
+					<option value="excom">EXCOM Meeting</option>
+					<option value="mtg">General Meeting</option>
+					<option value="civic">Civic Service</option>
+					<option value="water">On The Water Event</option>
+					<option value="vse">Vessel Examiner Event</option>
+					<option value="coop">Cooperative Charting</option>
+					<option value="oth">Other</option>
+					<option value=""></option>
+					<option value="class">Basic Boating Class</option>
+					<option value="advan">Advanced or Elective Class</option>
+					<option value="semin">Seminar</option>
+					<option value="spec">Special Class</option>
+				</field>
+			</fieldset>
+			<fieldset
+				name="advanced">
+				<field
+					name="layout"
+					type="modulelayout"
+					label="JFIELD_ALT_LAYOUT_LABEL"
+					description="JFIELD_ALT_MODULE_LAYOUT_DESC" 
+					default="single_line"    />
+				<field 
+					name="heading"
+					type="text" 
+					label="Heading"
+					description="Heading"
+					default="Squadron Events"
+				/>
+				<field
+					name="moduleclass_sfx"
+					type="text"
+					label="COM_MODULES_FIELD_MODULECLASS_SFX_LABEL"
+					description="COM_MODULES_FIELD_MODULECLASS_SFX_DESC" />
+				<field
+					name="cache"
+					type="list"
+					default="1"
+					label="COM_MODULES_FIELD_CACHING_LABEL"
+					description="COM_MODULES_FIELD_CACHING_DESC">
+					<option
+						value="1">JGLOBAL_USE_GLOBAL</option>
+					<option
+						value="0">COM_MODULES_FIELD_VALUE_NOCACHING</option>
+				</field>
+			</fieldset>
+		</fields>
+	</config>
+</extension>
