@@ -10,13 +10,21 @@
 
 // no direct access
 defined('_JEXEC') or die('Restricted access');
-	// We need an array with all of the expected data fields or we must rewrite showform()
-	$evt_row = modeventsHelper::get_event_blank();
-	$evt_row['event_name'] = "-- Enter the new event name here --";		
-	$evt_row['event_type'] = "mtg" ;
-	$evt_row['poc_id'] = $setup['user_id'];
-	$evt_row['squad_no'] = $setup['org'];
-	$evt_row['extras'] = array();
+$document = JFactory::getDocument();
+$document->addStyleSheet(getSiteUrl()."/plugins/system/t3/base/bootstrap/css/bootstrap-responsive.css");
+$document->addStyleSheet(getSiteUrl()."/templates/usps-site/css/bootstrap-datepicker3.css");
+$document->addStyleSheet(getSiteUrl()."/templates/usps-site/css/bootstrap.css");
+$document->addScript(getSiteUrl()."/plugins/system/t3/base/js/jquery-1.11.2.js");
+$document->addScript(getSiteUrl()."/plugins/system/t3/base-bs3/bootstrap/js/bootstrap.js");
+$document->addScript(getSiteUrl()."/templates/usps-site/js/bootstrap-datepicker.js");
+?>
+<style type="text/css">
+.datepicker {
+	background-color: #fff ;
+	color: #333 ;
+}
+</style>
+<?php	// We need an array with all of the expected data fields or we must rewrite showform()
 	showHeader($setup['header'],$me,'',$datepicker);
 ?>	
 	<input type="hidden" name="issetup" value="0" />

@@ -36,7 +36,7 @@ $me 		= $GLOBALS['me'] = $active->alias;
 $jinput 	= $app->input;
 if ($loging) log_it(__FILE__,__LINE__);
 if ($loging) log_it("The me value is: $me",__LINE__);
-$year 		= modeventsHelper::get_display_year();
+//$year 		= modeventsHelper::get_display_year();
 $issetup 	= $jinput->get('issetup');
 $user 		= JFactory::getUser();
 $username 	= $user->username; 
@@ -143,9 +143,16 @@ $states = array(
 $next = $setup['action']." ".$setup['mode'];
 switch(strtolower($setup['action']." ".$setup['mode'])){
 	case 'add award':
+		$awd_row = modeventsHelper::get_award_blank($setup);
 		require(JModuleHelper::getLayoutPath('mod_events','newaward'));
 		break;
 	case 'add event':
+		$evt_row = modeventsHelper::get_event_blank();
+		$evt_row['event_name'] = "-- Enter the new event name here --";		
+		$evt_row['event_type'] = "mtg" ;
+		$evt_row['poc_id'] = $setup['user_id'];
+		$evt_row['squad_no'] = $setup['org'];
+		$evt_row['extras'] = array();		
 		require(JModuleHelper::getLayoutPath('mod_events','newevent'));
 		break;
 	case 'add history';	 		

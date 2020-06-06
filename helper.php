@@ -218,6 +218,11 @@ $mod_folder = $GLOBALS['mod_folder'];
 	$vhqab->close();
 	return $evt;
 }
+//**************************************************************************
+static function getAjax(){
+	return 'It found the method.';
+}
+//**************************************************************************
 function generateMealList($event_id, $file_in){
 /*
  Insert Items - PHP program to create the html code to list conference purchase items 
@@ -407,10 +412,16 @@ static function get_award($award_id,$dbSource='local'){
 	return $array;
 }
 //**************************************************************************
-static function get_award_blank($dbSource='local'){
+static function get_award_blank($setup,$dbSource='local'){
 	$WebSites = JoeFactory::getLibrary("USPSd5dbWebSites",$dbSource); 
 	$array = $WebSites->getAwardBlank();
-	$WebSites->close();
+	$array['award_name'] = "";
+	$array['award_type'] = "squadron";
+	$array['award_source'] = "district";
+	$array['poc_id'] = $setup['user_id'];
+	$array['squad_no'] = $setup['org'];
+	$array['extras'] = array();
+	$array['award_citation'] = '';
 	return $array;
 }
 //**************************************************************************
@@ -468,12 +479,10 @@ static function getDateObj($date = null, $allDay = null, $tz = null){
 		return $dateObj;
 }
 //**************************************************************************
-static function get_display_year($dbSource='local'){
+static function get_display_year($squad_no, $dbSource='local'){
 	require(JPATH_LIBRARIES."/USPSaccess/dbUSPS.php");
-	$WebSites = JoeFactory::getLibrary("USPSd5dbWebSites",$dbSource);
-	$blob = $WebSites->getBlobsObject();
-	$year = $blob->get_display_year();
-	//$blob->close();
+	$vhqab = JoeFactory::getLibrary("USPSd5tableVHQAB",$dbSource);
+	$year = $vhqab->getSquadronDisplayYear($squad_no);
 	return $year;
 }
 //**************************************************************************
@@ -798,21 +807,18 @@ static function get_squadron_list($dbSource='local'){
 	$vhqab = JoeFactory::getLibrary("USPSd5tableVHQAB",$dbSource);
 	$sqds = $vhqab->getSquadronObject();
 	$squadrons = $sqds->get_squadron_list();
-	$vhqab->close();
 	return $squadrons;
 }
 //**************************************************************************
 static function get_squadron_name($org,$dbSource='local'){
 	$vhqab = JoeFactory::getLibrary("USPSd5tableVHQAB",$dbSource);
-	$nm = $vhqab->getSquadronName($org);
-	$vhqab->close();
+	$nm = $vhqab->getSquadronShortName($org);
 	return $nm;
 }
 //**************************************************************************
 static function get_squadron_state($org,$dbSource='local'){
 	$vhqab = JoeFactory::getLibrary("USPSd5tableVHQAB",$dbSource);
 	$state = $vhqab->getSquadronState($org);
-	$vhqab->close();
 	return $state;
 }
 //**************************************************************************
@@ -871,22 +877,26 @@ $me = $GLOBALS['me'];
 	return $stack;
 }
 //**************************************************************************
-static function update_award($dbSource='local'){
+static function update_award($setup, $dbSource='local'){
 	$WebSites = JoeFactory::getLibrary("USPSd5dbWebSites",$dbSource); 
 	$awds = $WebSites->getAwardsObject();
 	$blobs = $WebSites->getBlobsObject();
 
 	switch($_POST['award_type']){
 		case 'squadron':
-//			$_POST['award_to_squadron'] = $_POST['org'];
+			$_POST['award_to_squadron'] = $_POST['org'];
 			break;
 		default:
 	}
 	if ($_POST['award_name'] == ''){
 			$_POST['award_name'] = $_POST['special_award_name'];
 	}
-	if ($_POST['award_name'] == '')
+	if ($_POST['award_name'] == ''){
 		return "You must provide an Award Name";
+	}
+	if ($_POST['event_id'] == 0 and $_POST['award_source'] == 'district'){
+		return "You must identify the conference for a district award.";
+	}
 	$awds->update_record_changes('award_id',$_POST);
 
 	if (isset($_POST['award_extra'])){
@@ -1055,9 +1065,12 @@ $me = $GLOBALS['me'];
 				}
 			// Store the new event_id in the award record 
 			// Update the award
-			$return = modeventsHelper::update_award($dbSource);
-			if ($return != '')
+			$return = modeventsHelper::update_award($setup,$dbSource);
+			if ($return != ''){
 				$setup['error'] = $return;
+				// OK - we must setup to repeat the 
+				
+			}
 			// pop($setup);
 			break;				
 		case 'new award':
@@ -1076,9 +1089,11 @@ $me = $GLOBALS['me'];
 					}
 				}			
 			$return = modeventsHelper::update_award($dbSource);
-			if ($return != '')
-				$setup['error'] = $return;
-			pop($setup);
+			if ($return != ''){
+				$WebSites->deleteAward($_POST['award_id']);
+				$setup['error'] = $return;		
+			} else 
+				pop($setup);
 			break;
 		case 'add location':
 		case 'submit location':
@@ -1198,11 +1213,4 @@ $me = $GLOBALS['me'];
 	header("Location:$link");
 	exit(0);
 }
-//****************************************************************************
-function get_award_id_from_blob_record($rec,&$year,&$award_id){
-		$a_url = explode('/awards/',$rec['title']);
-		$a_url = explode('/',$a_url[1]);
-		$year = $a_url[0];
-		$award_id = explode('_',$a_url[1])[0];
-		return;
-}
+
