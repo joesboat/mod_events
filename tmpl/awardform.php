@@ -25,12 +25,17 @@ $members[''] = "Select from List";
 $events = modeventsHelper::get_conference_events(6243);
 $events_list = modeventsHelper::get_events_list($events);
 $setup['doc_types'] = modeventsHelper::get_doc_types();
-$awd_names = array(	"Kenneth Smith Seamanship Award"=>"Kenneth Smith Seamanship Award",
-					"Prince Henry Award"=>"Prince Henry Award",
+$awd_names = array(	
 					"Caravelle Award"=>"Caravelle Award",
-					"Henry E. Sweet Award"=>"Henry E. Sweet Excellence Award",
 					"Commanders Trophy Advanced Grades Award"=>"Commanders Trophy Advanced Grades Award",
 					"Commanders Trophy Electives Award"=>"Commanders Trophy Electives Award",
+					"D/5 Civic Service Award"=>"D/5 Civic Service Award",
+					"Distinctive Communicator Award - Newsletter"=>"Distinctive Communicator Award - Newsletter",
+					"Distinctive Communicator Award - Web Site"=>"Distinctive Communicator Award - Web Site",
+					"Henry E. Sweet Award"=>"Henry E. Sweet Excellence Award",
+					"Kenneth Smith Seamanship Award"=>"Kenneth Smith Seamanship Award",
+					"Prince Henry Award"=>"Prince Henry Award",
+					"USPS Civic Service Award"=>"USPS Civic Service Award",
 					"Workboat Award"=>"Workboat Award",
 					""=>"Select a standard award of enter new in textbox!");
 $awd_place = array(	""=>"",
@@ -112,6 +117,24 @@ $awd_place = array(	""=>"",
 ?>
 		</td>
 	</tr>
+<?php 
+	if ($next == 'add award'){
+?>
+	<tr>
+		<td>
+			New Standard Award		
+		</td>
+		<td>
+			You may use the <input 	type="submit" 
+									name=command 
+									value="New Name"
+									title="Suggest you only use this tools to identify awards presented each year.  Otherwise use the Special Award field below. "
+									 /> tool.  
+		</td>
+	</tr>
+<?php		
+	}
+?>
 	<tr>
 		<td>Special Award:</td>		
 		<td>

@@ -12,11 +12,8 @@
 defined('_JEXEC') or die('Restricted access');
 //***************************************************************************
 // Defines or displays a standard award 
-$award_sources = modeventsHelper::get_award_sources($dbSource);
-$award_types = modeventsHelper::get_award_types($dbSource);
-$squadrons = modeventsHelper::get_squadron_list($dbSource);
+
 $squadrons[6243] = "District 5";
-// $officers = modeventsHelper::get_officer_list($setup['org'],$year );
 if ($setup['org'] == 6243){
 	$sqd = ""; 
 } else {
@@ -26,15 +23,6 @@ if ($setup['org'] == 6243){
 //$members[''] = "Select from List";
 //$events = modeventsHelper::get_conference_events(6243);
 //$events_list = modeventsHelper::get_events_list($events);
-$setup['doc_types'] = modeventsHelper::get_doc_types($dbSource);
-$awd_names = array(	"Kenneth Smith Seamanship Award"=>"Kenneth Smith Seamanship Award",
-					"Prince Henry Award"=>"Prince Henry Award",
-					"Caravelle Award"=>"Caravelle Award",
-					"Henry E. Sweet Excellence Award"=>"Henry E. Sweet Excellence Award",
-					"Commanders Trophy Advanced Grades Award"=>"Commanders Trophy Advanced Grades Award",
-					"Commanders Trophy Electives Award"=>"Commanders Trophy Electives Award",
-					"Workboat Award"=>"Workboat Award",
-					""=>"Select a standard award of enter new in textbox!");
 showHeader("Maintain Award List",$me);
 ?>
 		<script>
@@ -47,6 +35,10 @@ showHeader("Maintain Award List",$me);
     			});
 			});
 		</script>
+	<input type="hidden" name="issetup" value="0" />
+	<input type="hidden" name="org" value="<?php echo $org;?>" />
+	<input type="hidden" name = 'updated_by' value='<?php echo $username; ?>' />
+	<input type="hidden" name = 'updated_date' value='<?php echo date("Y-m-d H:i:s") ?>' />
 	<table id='t8' class='table table-bordered' >
 	<colgroup>	
 <!--		<col id='t8c1' />
@@ -59,22 +51,22 @@ showHeader("Maintain Award List",$me);
 	</tr>
 <!-- Award Name -->
 	<tr>
-		<td>Special Award:</td>		
+		<td>New Award Name:</td>		
 		<td>
 			<input 	type="text" 
 					name="award_name" 
 					value="<?php echo ''; ?>" 
 					style="width:400px;" 
-					title="This field will only be recognized when a Standard Award Name has not been selected."
+					title="This will be the new award name."
 			/>
 		</td>
 	</tr>
 	<tr>
-		<td>Standard Award Name:</td>		
+		<td>Existing Award Names:</td>		
 		<td>
-			<select name='award_name' id='award_name' style="width:400px;">
+			<select name='existing_names' id='existing_names' style="width:400px;" size='8' disabled>
 <?php			
-				show_option_list($awd_names,'');
+				show_option_list($awd_names,'',false);
 ?>			
 			</select>
 			&nbsp;&nbsp;&nbsp;&nbsp;
@@ -95,11 +87,11 @@ showHeader("Maintain Award List",$me);
 	</tr>
 <!--Awarded By-->
 	<tr>
-		<td>Award By: <br/>&nbsp;&nbsp;&nbsp;&nbsp;(Choose from list.)</td>
+		<td>Awarded By: <br/>&nbsp;&nbsp;&nbsp;&nbsp;(Choose from list.)</td>
 		<td>
-			<select name="award_by" >
+			<select name="awarded_by" >
 			<?php 
-				foreach($award_sources as $key=>$value){
+				foreach($awarded_by as $key=>$value){
 				$str = '<option value="' . $key . '"' ; 
 //				if ($key == $awd_row['award_source']) $str .= " selected=$key " ; 
 				$str .= ">" . $value . '</option>' ; 
@@ -111,11 +103,11 @@ showHeader("Maintain Award List",$me);
 	</tr>
 <!--Awarded to-->
 	<tr>
-		<td>Award To: <br/>&nbsp;&nbsp;&nbsp;&nbsp;(Choose from list.)</td>
+		<td>Awarded To: <br/>&nbsp;&nbsp;&nbsp;&nbsp;(Choose from list.)</td>
 		<td>
-			<select name="award_type" >
+			<select name="awarded_to" >
 			<?php 
-				foreach($award_types as $key=>$value){
+				foreach($awarded_to as $key=>$value){
 				$str = '<option value="' . $key . '"' ; 
 //				if ($key == $awd_row['award_type']) $str .= " selected=$key " ; 
 				$str .= ">" . $value . '</option>' ; 
@@ -125,30 +117,10 @@ showHeader("Maintain Award List",$me);
 			</select>
 		</td>
 	</tr>
-<?php
-	if ($setup['org'] == 6243 or $setup['org'] == 0){
-?>
-<!--Award to Squadron -->
-	<tr>
-		<td>
-			Organization:
-		</td>
-		<td>
-			<select name='award_org' id='award_org' style="width:300px;">
-<?php			
-				show_option_list($squadrons,'6243');
-?>			
-			</select>
-		</td>
-	</tr>
-<?php
-	}
-?>		
 	</table>
 	
 	<input type='submit' name='command' value='Add' />
-	<input type='submit' name='command' value='Modify' />
-	<input type='submit' name='command' value='Delete' />
+	<input type='submit' name='command' value='Return' />
 	
 <?php
 showTrailer();

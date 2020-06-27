@@ -161,12 +161,6 @@ var subTotalField = document.getElementById("subTotalField1");
 			</TEXTAREA><br/>
 		</td>
 	</tr>
-<?php
-	if ($setup['org'] == 6243){
-	$squadrons = modeventsHelper::get_squadron_list();
-	$squadrons['6243'] = "M&R Committee";
-?>
-<!--// Point of Contact-->
 	<tr>
 		<td>EXCOM Member Point of Contact:</td>
 		<td>
@@ -175,6 +169,13 @@ var subTotalField = document.getElementById("subTotalField1");
 			</select>
 		</td>
 	</tr>
+<?php
+	if ($setup['org'] == 6243){
+	$squadrons = modeventsHelper::get_squadron_list();
+	$squadrons['6243'] = "M&R Committee";
+?>
+<!--// Point of Contact-->
+
 <!--Responsible Squadron -->
 	<tr>
 		<td>

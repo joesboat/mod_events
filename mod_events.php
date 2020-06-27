@@ -143,9 +143,16 @@ $states = array(
 $next = $setup['action']." ".$setup['mode'];
 switch(strtolower($setup['action']." ".$setup['mode'])){
 	case 'add award':
+		$awd_row = modeventsHelper::get_award_blank($setup);
 		require(JModuleHelper::getLayoutPath('mod_events','newaward'));
 		break;
 	case 'add event':
+		$evt_row = modeventsHelper::get_event_blank();
+		$evt_row['event_name'] = "-- Enter the new event name here --";		
+		$evt_row['event_type'] = "mtg" ;
+		$evt_row['poc_id'] = $setup['user_id'];
+		$evt_row['squad_no'] = $setup['org'];
+		$evt_row['extras'] = array();		
 		require(JModuleHelper::getLayoutPath('mod_events','newevent'));
 		break;
 	case 'add history';	 		
@@ -154,6 +161,27 @@ switch(strtolower($setup['action']." ".$setup['mode'])){
 		break;
 	case 'add location':
 		require(JModuleHelper::getLayoutPath('mod_events','newlocation'));
+		break;
+	case 'add new_award':
+		$awarded_by = modeventsHelper::get_award_sources();
+		unset($awarded_by['national']);
+		$awarded_to = modeventsHelper::get_award_types();
+		unset($awarded_to['district']);
+/*
+		$awd_names = array(	"Kenneth Smith Seamanship Award"=>"Kenneth Smith Seamanship Award",
+							"Prince Henry Award"=>"Prince Henry Award",
+							"Caravelle Award"=>"Caravelle Award",
+							"Henry E. Sweet Excellence Award"=>"Henry E. Sweet Excellence Award",
+							"Commanders Trophy Advanced Grades Award"=>"Commanders Trophy Advanced Grades Award",
+							"Commanders Trophy Electives Award"=>"Commanders Trophy Electives Award",
+							"Workboat Award"=>"Workboat Award",
+							""=>"Select a standard award of enter new in textbox!");
+*/
+		$awd_name_records = modeventsHelper::get_award_name_records();
+		foreach($awd_name_records as $key=>$rec){
+			$awd_names[$rec['award_name']] = $rec['award_name'];
+		}
+		require(JModuleHelper::getLayoutPath('mod_events','awardnameform'));
 		break;
 	case 'change award':
 		if ($orgType == 'any')
