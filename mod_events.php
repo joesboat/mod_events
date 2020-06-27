@@ -143,7 +143,10 @@ $states = array(
 $next = $setup['action']." ".$setup['mode'];
 switch(strtolower($setup['action']." ".$setup['mode'])){
 	case 'add award':
-		$awd_row = modeventsHelper::get_award_blank($setup);
+		$awd_name_records = modeventsHelper::get_award_name_records($setup['org']);
+		foreach($awd_name_records as $key=>$rec){
+			$awd_names[$rec['award_name']] = $rec['award_name'];
+		}		$awd_row = modeventsHelper::get_award_blank($setup);
 		require(JModuleHelper::getLayoutPath('mod_events','newaward'));
 		break;
 	case 'add event':
@@ -167,17 +170,11 @@ switch(strtolower($setup['action']." ".$setup['mode'])){
 		unset($awarded_by['national']);
 		$awarded_to = modeventsHelper::get_award_types();
 		unset($awarded_to['district']);
-/*
-		$awd_names = array(	"Kenneth Smith Seamanship Award"=>"Kenneth Smith Seamanship Award",
-							"Prince Henry Award"=>"Prince Henry Award",
-							"Caravelle Award"=>"Caravelle Award",
-							"Henry E. Sweet Excellence Award"=>"Henry E. Sweet Excellence Award",
-							"Commanders Trophy Advanced Grades Award"=>"Commanders Trophy Advanced Grades Award",
-							"Commanders Trophy Electives Award"=>"Commanders Trophy Electives Award",
-							"Workboat Award"=>"Workboat Award",
-							""=>"Select a standard award of enter new in textbox!");
-*/
-		$awd_name_records = modeventsHelper::get_award_name_records();
+		if ($setup['org'] != ''){
+			unset($awarded_by['district']);
+			unset($awarded_to['squadron']);
+		}
+		$awd_name_records = modeventsHelper::get_award_name_records($setup['org']);
 		foreach($awd_name_records as $key=>$rec){
 			$awd_names[$rec['award_name']] = $rec['award_name'];
 		}
@@ -246,6 +243,10 @@ switch(strtolower($setup['action']." ".$setup['mode'])){
 		require(JModuleHelper::getLayoutPath('mod_events','list_sorted_events'));
 		break;
 	case 'update award':
+		$awd_name_records = modeventsHelper::get_award_name_records($setup['org']);
+		foreach($awd_name_records as $key=>$rec){
+			$awd_names[$rec['award_name']] = $rec['award_name'];
+		}
 		$awd_row = modeventsHelper::get_award($setup['award_id']);
 		require(JModuleHelper::getLayoutPath('mod_events','updateaward'));
 		break;

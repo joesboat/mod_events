@@ -34,7 +34,7 @@ $document->addScript(getSiteUrl()."/templates/usps-site/js/bootstrap-datepicker.
 	require(JModuleHelper::getLayoutPath('mod_events','eventform'));	
 ?>
 	<br/>
-	<input type="submit" name=command value="New" />
+	<input type="submit" name=command value="Add" />
 	<br />
 	<input type="submit" name="command" value="Return" />
 	<br/>

@@ -26,12 +26,6 @@ defined('_JEXEC') or die('Restricted access');
 		<input type='submit' name='command' value='Update' id='SubmitButton' /> or
 		<input type='submit' name='command' value='Delete' id='SubmitButton' /> button to continue.</p>
 	<?php
-//	$type = $params->get("type");
-//	if (in_array('all',$type)){
-//		$events = modeventsHelper::get_events("6243");
-//	} else {
-//		$events = modeventsHelper::get_future_events($setup);
-//	}
 	foreach($events as $e_row) {
 	?>
 		<input type='radio' name='event_id' value='<?php echo $e_row[' event_id ']; ?>' />

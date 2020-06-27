@@ -19,10 +19,6 @@ if ($setup['org'] == 6243){
 } else {
 	$sqd = $setup['org'];
 }
-//$members = modeventsHelper::get_members($sqd);
-//$members[''] = "Select from List";
-//$events = modeventsHelper::get_conference_events(6243);
-//$events_list = modeventsHelper::get_events_list($events);
 showHeader("Maintain Award List",$me);
 ?>
 		<script>
@@ -91,12 +87,13 @@ showHeader("Maintain Award List",$me);
 		<td>
 			<select name="awarded_by" >
 			<?php 
-				foreach($awarded_by as $key=>$value){
-				$str = '<option value="' . $key . '"' ; 
+//				foreach($awarded_by as $key=>$value){
+//				$str = '<option value="' . $key . '"' ; 
 //				if ($key == $awd_row['award_source']) $str .= " selected=$key " ; 
-				$str .= ">" . $value . '</option>' ; 
-				echo $str ;
-				}
+//				$str .= ">" . $value . '</option>' ; 
+//				echo $str ;
+//				}
+				show_option_list($awarded_by,'',false);
 			?>				
 			</select>
 		</td>
@@ -105,14 +102,15 @@ showHeader("Maintain Award List",$me);
 	<tr>
 		<td>Awarded To: <br/>&nbsp;&nbsp;&nbsp;&nbsp;(Choose from list.)</td>
 		<td>
-			<select name="awarded_to" >
+			<select name="awarded_to" size='2' >
 			<?php 
-				foreach($awarded_to as $key=>$value){
-				$str = '<option value="' . $key . '"' ; 
+//				foreach($awarded_to as $key=>$value){
+//					$str = '<option value="' . $key . '"' ; 
 //				if ($key == $awd_row['award_type']) $str .= " selected=$key " ; 
-				$str .= ">" . $value . '</option>' ; 
-				echo $str ;
-				}
+//					$str .= ">" . $value . '</option>' ; 
+//					echo $str ;
+//				}
+				show_option_list($awarded_to,'squadron',false);
 			?>
 			</select>
 		</td>

@@ -425,10 +425,10 @@ static function get_award_blank($setup,$dbSource='local'){
 	return $array;
 }
 //**************************************************************************
-static function get_award_name_records($dbSource=''){
+static function get_award_name_records($org,$dbSource=''){
 	$WebSites = JoeFactory::getLibrary("USPSd5dbWebSites",$dbSource); 
 	$blobs = $WebSites->getBlobsObject();
-	$awds = $blobs->get_award_names();
+	$awds = $blobs->get_award_names($org);
 	return $awds;
 }
 //**************************************************************************
@@ -461,7 +461,6 @@ static function get_conference_events($org,$dbSource='local'){
 //****************************************************************
 static function getDateObj($date = null, $allDay = null, $tz = null){
 	$dateObj = JFactory::getDate($date, $tz);
-
 		$timezone = JFactory::getApplication()->getCfg('offset');
 		$user = JFactory::getUser();
 		if ($user->get('id'))
@@ -472,9 +471,7 @@ static function getDateObj($date = null, $allDay = null, $tz = null){
 				$timezone = $userTimezone;
 			}
 		}
-
 		$timezone = JFactory::getSession()->get('user-timezone', $timezone, 'DPCalendar');
-
 		if (! $allDay)
 		{
 			$dateObj->setTimezone(new DateTimeZone($timezone));
@@ -493,8 +490,8 @@ static function get_display_year($dbSource='local'){
 //**************************************************************************
 static function get_dist_or_squad_conference_events($org,$dbSource='local'){
 	$WebSites = JoeFactory::getLibrary("USPSd5dbWebSites",$dbSource);
-	$select = "event_type = 'conf' or event_type = 'mtg'";
-	$orgs = "squad_no='$org' or squad_no ='6243'";
+	$select = "event_type = 'conf' ";
+	$orgs = "(squad_no='$org' or squad_no ='6243')";
 	$events =  $WebSites->getEvents($orgs,$select,'') ;
 	$WebSites->close();
 	return $events;	
@@ -508,7 +505,7 @@ static function get_doc_types($dbSource='local'){
 }
 //**************************************************************************
 static function get_ed_awds(){
-	$awd_names = array(	
+	$awd_names = array(
 		"Kenneth Smith Seamanship Award"=>"Kenneth Smith Seamanship Award",
 		"Prince Henry Award"=>"Prince Henry Award",
 		"Caravelle Award"=>"Caravelle Award",
@@ -545,6 +542,7 @@ static function get_event_types($dbSource='local'){
 }
 //*********************************************************
 static function get_events($org,$dbSource='local'){
+	
 	$WebSites = JoeFactory::getLibrary("USPSd5dbWebSites",$dbSource); 
 	$events =  $WebSites->getEvents("squad_no='$org'","","desc") ;
 	$WebSites->close();
@@ -575,23 +573,14 @@ static function get_events_having_documents($org,$dbSource='local'){
 			$list[] = $event;
 			$id = $event['event_id'];
 		} else 
-			continue; 
-		
-	}
-	
-	
+			continue; 	
+	}	
 	return $list;
 }
 //*********************************************************
 static function get_events_with_sort($display_by,$dbSource='local'){
 	$WebSites = JoeFactory::getLibrary("USPSd5dbWebSites",$dbSource); 
 	$evts =  $WebSites->getEventsObject() ;
-	
-
-	
-	
-
-
 	$query = $state = $event_name = $squad_no = '';
 	$query .= "course_id != '' and start_date >= curdate() ";
 	$this_year = 0;
@@ -839,6 +828,9 @@ static function handle_award_name($pst,$setup,$dbSource='local'){
 	$blob = $WebSites->getBlobsObject();
 	switch( strtolower($pst['command']) ){
 		case 'add':
+			if ($pst['org'] != ''){
+				$pst['squad_no'] = $pst['org'];
+			}
 			$blob->store_award_name($pst);
 			break;
 		case 'delete':
@@ -877,7 +869,7 @@ $me = $GLOBALS['me'];
 			pop($setup); 
 		case 'return event':
 			pop($setup); 
-		case 'new event':
+		case 'add event':
 		case 'submit event':
 			$return = modeventsHelper::update_event($dbSource);		// $_POST carries data on event 
 			if ($return != '')

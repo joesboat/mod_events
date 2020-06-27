@@ -15,29 +15,12 @@ $award_sources = modeventsHelper::get_award_sources();
 $award_types = modeventsHelper::get_award_types();
 $squadrons = modeventsHelper::get_squadron_list();
 $officers = modeventsHelper::get_officer_list($setup['org'],$year );
-if ($setup['org'] == 6243){
-	$sqd = ""; 
-} else {
-	$sqd = $setup['org'];
-}
-$members = modeventsHelper::get_members($sqd);
+$members = modeventsHelper::get_members($setup['org']);
 $members[''] = "Select from List";
-$events = modeventsHelper::get_conference_events(6243);
+$events = modeventsHelper::get_dist_or_squad_conference_events($setup['org']);
 $events_list = modeventsHelper::get_events_list($events);
 $setup['doc_types'] = modeventsHelper::get_doc_types();
-$awd_names = array(	
-					"Caravelle Award"=>"Caravelle Award",
-					"Commanders Trophy Advanced Grades Award"=>"Commanders Trophy Advanced Grades Award",
-					"Commanders Trophy Electives Award"=>"Commanders Trophy Electives Award",
-					"D/5 Civic Service Award"=>"D/5 Civic Service Award",
-					"Distinctive Communicator Award - Newsletter"=>"Distinctive Communicator Award - Newsletter",
-					"Distinctive Communicator Award - Web Site"=>"Distinctive Communicator Award - Web Site",
-					"Henry E. Sweet Award"=>"Henry E. Sweet Excellence Award",
-					"Kenneth Smith Seamanship Award"=>"Kenneth Smith Seamanship Award",
-					"Prince Henry Award"=>"Prince Henry Award",
-					"USPS Civic Service Award"=>"USPS Civic Service Award",
-					"Workboat Award"=>"Workboat Award",
-					""=>"Select a standard award of enter new in textbox!");
+
 $awd_place = array(	""=>"",
 					"- 2nd Place"=>"- 2nd Place",
 					"- 3rd Place"=>"- 3rd Place" );
