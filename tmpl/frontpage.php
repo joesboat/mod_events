@@ -54,10 +54,6 @@ function callModal(url){
 <table style="width: 100%; " border='1' cellpadding='0'>
 <?php
 	foreach($events as $key=>$evt){
-		//$WebSites = JoeFactory::getLibrary("USPSd5dbWebSites","local");
-		//$evt['extras'] = $WebSites->getEventDocuments($evt['event_id'],true);
-		//$WebSites->close();
-		//if ($key > 7) break;
 		if (substr($evt['start_date'],0,4) > $year){
 			$year = substr($evt['start_date'],0,4);
 ?>

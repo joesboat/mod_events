@@ -770,29 +770,6 @@ $loging = $GLOBALS['loging'] ;
 	if ($loging) log_it("After getfutureEvents",__LINE__);
 	foreach($events as &$evt){
 		$evt = modeventsHelper::expand_event_record($evt,$dbSource);     
-/*
-		$evt['extras'] = $WebSites->getEventDocuments($evt['event_id']);
-			$evt['poc_full_name'] = '';
-		$evt['telephone'] = '';
-		$evt['color'] = $evt_colors[$evt['event_type']];
-		$evt['event_name_with_modal'] = modeventsHelper::build_event_modal($evt,"event_gen.php");
-		$evt['register_modal'] = modeventsHelper::build_register_modal($evt);
-		if ($evt['poc_id'] != ''){
-			$evt['poc_full_name'] = $vhqab->getMemberNameAndRank($evt['poc_id'], TRUE);
-			$evt['telephone'] = $vhqab->getMemberPhone($evt['poc_id']);
-		}
-		if ($evt['lead_squadron'] != ''){
-			$evt['lead_squadron_short_name'] = 
-				$vhqab->getSquadronShortName($evt['lead_squadron'],TRUE);
-		}
-		$evt['date_obj'] = modeventsHelper::getDateObj($evt["start_date"],$dbSource);		
-		$evt['date_str'] = modeventsHelper::build_date_str($evt["start_date"],$evt["end_date"]);
-		$evt['date_rng'] = get_date_range($evt);
-		$evt['date_2ln'] = getDateTime2($evt);
-		$evt['location_name'] = $WebSites->getLocationName($evt['location'],TRUE);
-		$evt['squad_short_name'] =  $vhqab->getSquadronShortName($evt['squad_no'],TRUE);
-			// create a url parameter find this document 
-*/
 	}
 	if ($loging) log_it("Before return",__LINE__);
 	return $events;

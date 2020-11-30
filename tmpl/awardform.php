@@ -227,12 +227,13 @@ $awd_place = array(	""=>"",
 				$ct = 0;
 				if (is_array($awd_row['extras'])) 
 					foreach($awd_row['extras'] as $type=>$doc){
+						$url = getSiteUrl()."/php/get_doc.php?item=".$doc['id'];
 						$ct ++;
 					?>
 					<tr>
 						<td>
 							<input type="checkbox" 
-									value="<?php echo $doc;?>" 
+									value="<?php echo $url;?>" 
 									name="delete_<?php echo $ct; ?>" 
 							>
 						</td>
@@ -241,9 +242,25 @@ $awd_place = array(	""=>"",
 						</td>
 						<td>&nbsp;&nbsp;&nbsp;</td>
 						<td>
-							<?php echo $doc; ?>
+							<?php echo $url; ?>
 							<br />
-							<img src='<?php echo $doc; ?>' width='400'>
+<?php
+							switch($doc['type']){
+								case "application/pdf":
+									?><object 
+												data='<?php echo $url; ?>' 
+												type='application/pdf' 
+												width='400px'
+												height="360px"
+											></object> 
+<?php
+									break;
+								default: 
+?>
+									<img src='<?php echo $url; ?>' width='400'>
+<?php 									
+							}
+?>
 						</td>
 					</tr>	
 					<?php

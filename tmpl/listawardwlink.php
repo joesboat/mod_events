@@ -23,7 +23,7 @@ if (count($awards) > 0 ){
 	foreach($awards as $e_row) {
 		//$link = "index.php?itemid=1351";
 		$link = getSiteUrl()."/index.php/squadron-award";
-		$link .= "?squad_no=".$e_row['squad_no']; 
+		$link .= "?squad_no=".$e_row['award_to_squadron']; 
 		$link .= "&award_id=".$e_row['award_id'];
 		//$link .= "&command=show";
 		if ($e_row['award_year'] != $yr){

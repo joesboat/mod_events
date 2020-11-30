@@ -83,6 +83,7 @@ defined('_JEXEC') or die('Restricted access');
 				$ct = 0;
 				if (is_array($award['extras'])) 
 					foreach($award['extras'] as $type=>$doc){
+						$url = getSiteUrl()."/php/get_doc.php?item=".$doc['id'];
 						$ct ++;
 					?>
 					<tr>
@@ -93,7 +94,24 @@ defined('_JEXEC') or die('Restricted access');
 						</td>
 						<td>&nbsp;&nbsp;&nbsp;</td>
 						<td>
-							<img src='<?php echo $doc; ?>' width='400'>
+<?php 
+							switch($doc['type']){
+								case "application/pdf":
+?>
+									<object 
+										data='<?php echo $url; ?>' 
+										type='application/pdf' 
+										width='400px'
+										height="360px"
+									></object> 
+<?php
+									break;
+								default: 
+?>
+									<img src='<?php echo $url; ?>' width='400'>
+<?php 									
+							}
+?>			
 						</td>
 					</tr>	
 					<?php
