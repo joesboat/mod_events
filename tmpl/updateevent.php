@@ -10,9 +10,24 @@
 
 // no direct access
 defined('_JEXEC') or die('Restricted access');	
+$document = JFactory::getDocument();
+$document->addStyleSheet(getSiteUrl()."/plugins/system/t3/base/bootstrap/css/bootstrap-responsive.css");
+$document->addStyleSheet(getSiteUrl()."/templates/usps-site/css/bootstrap-datepicker3.css");
+$document->addStyleSheet(getSiteUrl()."/templates/usps-site/css/bootstrap.css");
+$document->addScript(getSiteUrl()."/plugins/system/t3/base/js/jquery-1.11.2.js");
+$document->addScript(getSiteUrl()."/plugins/system/t3/base-bs3/bootstrap/js/bootstrap.js");
+$document->addScript(getSiteUrl()."/templates/usps-site/js/bootstrap-datepicker.js");
+?>
+<style type="text/css">
+.datepicker {
+	background-color: #fff ;
+	color: #333 ;
+}
+</style>
+<?php
 	// Display results
 	showHeader($setup['header'],$me,'',$datepicker);
-	if ($setup['error'] != ''){
+if ($setup['error'] != ''){
 ?>
 	<h3 style="color:red;font-size:14pt;">	
 		<?php echo $setup['error']; ?>

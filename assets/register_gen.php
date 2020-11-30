@@ -1,6 +1,5 @@
 <?php
 $logging = false;
-//include ("c:/uspsd5/applications/setupJoomlaAccess.php");
 include($_SERVER['CONTEXT_DOCUMENT_ROOT']."/applications/setupJoomlaAccess.php");
 $WebSites = JoeFactory::getLibrary("USPSd5dbWebSites","local"); 
 if ($logging) log_it("Entering ".__FILE__,__LINE__);

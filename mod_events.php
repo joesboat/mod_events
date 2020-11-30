@@ -25,10 +25,11 @@ require_once(dirname(__FILE__).'/helper.php');
 $debug = $params->get('siteDump');
 $GLOBALS['loging'] = $loging = $params->get('siteLog');
 $GLOBALS['mod_folder'] = $mod_folder = explode('.',basename(__FILE__))[0];
-$db_source 	= $params->get('dbsource');
-$orgType 	= $params->get('orgType');
-$modtype 	= $params->get('modtype');
-$scope 		= $params->get("scope");
+$db_source 		= $params->get('dbsource');
+$orgType 		= $params->get('orgType');
+$modtype 		= $params->get('modtype');
+$scope 			= $params->get("scope");
+$layout_height 	= $params->get("layout_height");
 $app       	= JFactory::getApplication(); // Access the Application Object
 $menu      	= $app->getMenu(); // Load the JMenuSite Object
 $active    	= $menu->getActive(); // Load the Active Menu Item as an stdClass Object	
@@ -37,6 +38,7 @@ $jinput 	= $app->input;
 if ($loging) log_it(__FILE__,__LINE__);
 if ($loging) log_it("The me value is: $me",__LINE__);
 $year 		= modeventsHelper::get_display_year();
+$year		= date("Y");
 $issetup 	= $jinput->get('issetup');
 $user 		= JFactory::getUser();
 $username 	= $user->username; 
@@ -89,6 +91,7 @@ if (isset($issetup)){
 //		echo "You are not authorized to execute this tool.  Please contact an officer for assistance.";
 //		exit;
 //	}
+	$setup['orgType'] = $orgType;
 	$setup['org'] = $org;
 	$setup['org_name'] = $squad_name;
 	$setup['state'] = modeventsHelper::get_squadron_state($org);
@@ -143,9 +146,19 @@ $states = array(
 $next = $setup['action']." ".$setup['mode'];
 switch(strtolower($setup['action']." ".$setup['mode'])){
 	case 'add award':
+		$awd_name_records = modeventsHelper::get_award_name_records($setup['org']);
+		foreach($awd_name_records as $key=>$rec){
+			$awd_names[$rec['award_name']] = $rec['award_name'];
+		}		$awd_row = modeventsHelper::get_award_blank($setup);
 		require(JModuleHelper::getLayoutPath('mod_events','newaward'));
 		break;
 	case 'add event':
+		$evt_row = modeventsHelper::get_event_blank();
+		$evt_row['event_name'] = "-- Enter the new event name here --";		
+		$evt_row['event_type'] = "mtg" ;
+		$evt_row['poc_id'] = $setup['user_id'];
+		$evt_row['squad_no'] = $setup['org'];
+		$evt_row['extras'] = array();		
 		require(JModuleHelper::getLayoutPath('mod_events','newevent'));
 		break;
 	case 'add history';	 		
@@ -154,6 +167,21 @@ switch(strtolower($setup['action']." ".$setup['mode'])){
 		break;
 	case 'add location':
 		require(JModuleHelper::getLayoutPath('mod_events','newlocation'));
+		break;
+	case 'add new_award':
+		$awarded_by = modeventsHelper::get_award_sources();
+		unset($awarded_by['national']);
+		$awarded_to = modeventsHelper::get_award_types();
+		unset($awarded_to['district']);
+		if ($setup['org'] != ''){
+			unset($awarded_by['district']);
+			unset($awarded_to['squadron']);
+		}
+		$awd_name_records = modeventsHelper::get_award_name_records($setup['org']);
+		foreach($awd_name_records as $key=>$rec){
+			$awd_names[$rec['award_name']] = $rec['award_name'];
+		}
+		require(JModuleHelper::getLayoutPath('mod_events','awardnameform'));
 		break;
 	case 'change award':
 		if ($orgType == 'any')
@@ -169,6 +197,7 @@ switch(strtolower($setup['action']." ".$setup['mode'])){
 		} else {
 			$events = modeventsHelper::get_events($setup['org']);
 		}	
+		$layout = $params->get('layout', 'default');
 		require(JModuleHelper::getLayoutPath('mod_events',$params->get('layout', 'default')));
 		//listEvents($setup);
 		break;
@@ -206,7 +235,9 @@ switch(strtolower($setup['action']." ".$setup['mode'])){
 			$events = modeventsHelper::get_events_having_documents($setup['org'],array('all'));
 		} else {
 			$events = modeventsHelper::get_events_having_documents($setup['org']);
+//			$events = modeventsHelper::get_conference_events($setup['org']);
 		}	
+		$nxt = $params->get('layout', 'default');
 		require(JModuleHelper::getLayoutPath('mod_events',$params->get('layout', 'default')));
 		break;
 	case 'sort event_sort':
@@ -218,6 +249,10 @@ switch(strtolower($setup['action']." ".$setup['mode'])){
 		require(JModuleHelper::getLayoutPath('mod_events','list_sorted_events'));
 		break;
 	case 'update award':
+		$awd_name_records = modeventsHelper::get_award_name_records($setup['org']);
+		foreach($awd_name_records as $key=>$rec){
+			$awd_names[$rec['award_name']] = $rec['award_name'];
+		}
 		$awd_row = modeventsHelper::get_award($setup['award_id']);
 		require(JModuleHelper::getLayoutPath('mod_events','updateaward'));
 		break;

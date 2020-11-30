@@ -6,6 +6,9 @@
 * @email joe@joesboat.org
 * @copyright Copyright (C) 2018 Joseph P. Gibson. All rights reserved.
 * @license GNU General Public License version 2 or later; see LICENSE.txt
+*
+* ListEventsForUpdate.php - Called from members only modules.  Provides 
+*                           cotrols to initiate a change to an event record. 
 **/
 
 // no direct access
@@ -13,6 +16,47 @@ defined('_JEXEC') or die('Restricted access');
 	showHeader($setup['header'],$me);
 	$yr = 1965;
 ?>
+<script>
+//***************************************************************
+function submit_it(btn){
+	// Called from several types of buttons
+	// Builds new <form> using 'action' attribute from form 'fh1'
+	// Organizes data into a new form with std. set of fields
+	//		action = action from current form
+	//		input names:
+	//			value - contents of button 'value' field
+	//			command - contents of button name field
+var newF = document.createElement("form");
+	// stop
+var pForms = document.getElementsByTagName("form"); 
+var fh1 = document.getElementById("fh1");
+var obj, nm, vl;
+	newF.action = fh1.action ;
+	newF.method = 'POST'; 
+	btna = btn.attributes;
+	for (var val in btna) {
+  		obj = btna.item(val);
+  		nm = obj.name;
+  		vl = obj.value;
+  		if (nm == 'type') continue;
+  		if (nm == 'onclick') continue;
+  		new_input(newF,nm,vl);
+	}
+	//new_input(newF,"value",btn.id);
+	//new_input(newF,"command",btn.name);
+	document.getElementsByTagName('body')[0].appendChild(newF);
+	newF.submit();
+}
+//***************************************************************
+function new_input(f,nm,v){
+// Called from get_window_dimensions to create an input element 
+var i = document.createElement("input");
+	i.name = nm;
+	i.type = 'hidden';
+	i.value = v;
+	f.appendChild(i);
+}
+</script>
 	<input type="hidden" name="issetup" value="0" />
 	<input type="hidden" name="org" value="<?php echo $org;?>" />
 	<h4>View and Update Location Details
@@ -21,11 +65,6 @@ defined('_JEXEC') or die('Restricted access');
 	<input type='submit' name='command' value='New' id='SubmitButton' /></h4>
 
 	<center><h4>Known Events</h4></center>
-	<p>Select the event and then press an 
-	<input type='submit' name='command' value='Update' id='SubmitButton' />
-	 or 
-	<input type='submit' name='command' value='Delete' id='SubmitButton' />
-	 button to continue.</p>
 	<?php
 	foreach($events as $e_row) {
 		if (date("Y", strtotime($e_row['start_date'])) != $yr){
@@ -33,7 +72,28 @@ defined('_JEXEC') or die('Restricted access');
 			echo "<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>$yr</b><br /><br />";
 		}
 	?>
-		<input type='radio' name='event_id' value='<?php echo $e_row['event_id']; ?>' / > 
+		<button 	
+					command 	=	'update' 
+					type		=	'button' 
+					name		=	'command' 
+					value		=	'update' 
+					event_id	=	"<?php echo $e_row['event_id']; ?>" 
+					onclick		=	"submit_it(this);"
+					class		=	"btn btn-primary btn-sm form-control"
+		>
+				Update
+		</button> 
+<!--		<button 	
+					command 	=	'delete' 
+					type		=	'button' 
+					name		=	'command' 
+					value		=	'delete' 
+					event_id	=	"<?php echo $e_row['event_id']; ?>" 
+					onclick		=	"submit_it(this);"
+					class		=	"btn btn-primary btn-sm form-control"
+		>
+				Delete
+		</button> -->
 		<?php echo date("Y/m/d", strtotime($e_row['start_date'])); ?>
 		<strong>
 			<?php echo $e_row['event_name']; ?>
@@ -51,11 +111,6 @@ defined('_JEXEC') or die('Restricted access');
 	}
 	?>
 	</br>
-	<input type='submit' name='command' value='Update' id='SubmitButton' /> 
-	&nbsp;&nbsp;&nbsp;&nbsp;
-	<input type='submit' name='command' value='Delete' id='SubmitButton' />
-	&nbsp;&nbsp;&nbsp;&nbsp;
-	<input type='submit' name='command' value='Registrations' id='SubmitRegistrations' />
 	<?php
 	showTrailer();
 

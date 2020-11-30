@@ -39,7 +39,6 @@ static function add_or_update_location($dbSource='local'){
 			$WebSites->updateLocation($_POST);
 			break;
 	}
-	$WebSites->close();
 	return ;
 }
 //**************************************************************************
@@ -54,8 +53,6 @@ static function add_historical_object($doc_type, &$award_id, $dbSource='local'){
 	$_POST['squad_no'] = $_POST['org'];
 	$return = modeventsHelper::update_award($dbSource);
 
-	$WebSites->close();
-	//$vhqab->close();
 	return $return;
 }
 //****************************************************************
@@ -167,6 +164,21 @@ $mod_folder = $GLOBALS['mod_folder'];
 	return $str;
 }
 //**************************************************************************
+static function build_time_str($start, $end){
+	$st = strtotime($start);
+	$ed = strtotime($end);
+	if ($start == $end)
+		return date("hm",$st);
+	$start_time = date("Hi",$st);
+	$end_time = date("Hi",$ed);
+	if (date("d",$st) == date("d",$ed)){
+		return "$start_time - $end_time";
+	} else {
+		return "$start_time";
+	}
+	
+}
+//**************************************************************************
 static function delete_item($dbSource='local'){
 	$WebSites = JoeFactory::getLibrary("USPSd5dbWebSites",$dbSource);
 	if (isset($_POST['event_id'])){
@@ -178,7 +190,6 @@ static function delete_item($dbSource='local'){
 	if (isset($_POST['award_id'])){
 		$WebSites->deleteAward($_POST['award_id']);
 	}	
-	$WebSites->close();
 	return ;
 }
 //**************************************************************************
@@ -196,28 +207,32 @@ $mod_folder = $GLOBALS['mod_folder'];
 		$evt['event_name_with_modal'] = modeventsHelper::build_event_modal($evt,"event_gen.php");
 		$evt['register_modal'] = modeventsHelper::build_register_modal($evt);
 		if ($evt['poc_id'] != ''){
-			$evt['poc_full_name'] = $vhqab->getMemberNameAndRank($evt['poc_id'], true);
+			$evt['poc_full_name'] = $vhqab->getMemberNameAndRank($evt['poc_id'], TRUE);
 			$evt['telephone'] = $vhqab->getMemberPhone($evt['poc_id']);
 		}
 		if ($evt['lead_squadron'] != ''){
 			$evt['lead_squadron_short_name'] = 
-				$vhqab->getSquadronShortName($evt['lead_squadron'],true);
+				$vhqab->getSquadronShortName($evt['lead_squadron'],TRUE);
 		}
 		$evt['date_obj'] = modeventsHelper::getDateObj($evt["start_date"],$dbSource);		
 		$evt['date_str'] = modeventsHelper::build_date_str($evt["start_date"],$evt["end_date"]);
+		$evt['time_str'] = modeventsHelper::build_time_str($evt["start_date"],$evt["end_date"]);
 		$evt['date_rng'] = get_date_range($evt);
 		$evt['date_2ln'] = getDateTime2($evt);
 		$location = $WebSites->getLocation($evt['location_id']);
-		$evt['location_name'] = $WebSites->getLocationName($location,true);
-		$evt['squad_short_name'] =  $vhqab->getSquadronShortName($evt['squad_no'],true);
+		$evt['location_name'] = $WebSites->getLocationName($location,TRUE);
+		$evt['squad_short_name'] =  $vhqab->getSquadronShortName($evt['squad_no'],TRUE);
 			// create a url parameter find this document 
 		$evt['event_description'] =  $WebSites->getEventDescription($evt['event_id']);
 		$evt['location'] = $WebSites->getLocationData($evt['location_id']);
 		$evt['extras'] = $WebSites->getEventDocuments($evt['event_id']);
-	$WebSites->close();
-	$vhqab->close();
 	return $evt;
 }
+//**************************************************************************
+static function getAjax(){
+	return 'It found the method.';
+}
+//**************************************************************************
 function generateMealList($event_id, $file_in){
 /*
  Insert Items - PHP program to create the html code to list conference purchase items 
@@ -249,7 +264,7 @@ function generateMealList($event_id, $file_in){
 */
 $eol = "\r\n" ;
 //if (! isset($items)){
-//	$builditems = true ;
+//	$builditems = TRUE ;
 //	$items = array();
 //} else 
 //	$builditems = false;
@@ -268,7 +283,7 @@ $fo = fopen($file_out,"w");
 fwrite($fo,'<?php'.$eol);
 fwrite($fo,"defined('_JEXEC') or die('Restricted access');$eol");
 fwrite($fo,'	if (! isset($items)){'.$eol);
-fwrite($fo,'		$builditems = true ;'.$eol);
+fwrite($fo,'		$builditems = TRUE ;'.$eol);
 fwrite($fo,'		$items = array();'.$eol);
 fwrite($fo,'	} else '.$eol);
 fwrite($fo,'		$builditems = false; '.$eol);
@@ -286,7 +301,7 @@ while ($line = fgets($fIn)){
 			fwrite($fo,"</tr>$eol");
 			$fieldset = false;
 		}
-		$fieldset = true;
+		$fieldset = TRUE;
 		fwrite($fo,		"<tr>$eol");
 		fwrite($fo,			"<td colspan='3'>$eol");
 		fwrite($fo, 			'<fieldset>'.$eol.'<legend>'.$def_ary[1].'</legend>'.$eol);
@@ -395,30 +410,38 @@ fclose($fo);
 static function get_award($award_id,$dbSource='local'){
 	$WebSites = JoeFactory::getLibrary("USPSd5dbWebSites",$dbSource); 
 	$awds = $WebSites->getAwardsObject();
-	$blobs = $WebSites->getBlobsObject();
+	$docs = $WebSites->getDocumentsObject();
 	$array = $awds->get_record('award_id',$award_id);
 	if (! $array) return false;
 	$array['extras'] = array();
-	$doc_list = $blobs->get_award_documents($award_id,$dbSource);
-	foreach($doc_list as $doc){
-		$array['extras'][$doc['b_info']][$doc['b_type']] = $doc['title'];
-	}
-	$WebSites->close();
+	$array['extras'] = $docs->get_award_documents($award_id,$dbSource);
 	return $array;
 }
 //**************************************************************************
-static function get_award_blank($dbSource='local'){
+static function get_award_blank($setup,$dbSource='local'){
 	$WebSites = JoeFactory::getLibrary("USPSd5dbWebSites",$dbSource); 
 	$array = $WebSites->getAwardBlank();
-	$WebSites->close();
+	$array['award_name'] = "";
+	$array['award_type'] = "squadron";
+	$array['award_source'] = "district";
+	$array['poc_id'] = $setup['user_id'];
+	$array['squad_no'] = $setup['org'];
+	$array['extras'] = array();
+	$array['award_citation'] = '';
 	return $array;
+}
+//**************************************************************************
+static function get_award_name_records($org,$dbSource=''){
+	$WebSites = JoeFactory::getLibrary("USPSd5dbWebSites",$dbSource); 
+	$blob = $WebSites->getBlobsObject();
+	$awds = $blob->get_award_names($org);
+	return $awds;
 }
 //**************************************************************************
 static function get_award_sources($dbSource='local'){
 	$WebSites = JoeFactory::getLibrary("USPSd5dbWebSites",$dbSource); 
 	$awds = $WebSites->getAwardsObject();
 	$sources = $awds->award_sources;
-	$WebSites->close();
 	return $sources;
 }
 //**************************************************************************
@@ -426,14 +449,12 @@ static function get_award_types($dbSource='local'){
 	$WebSites = JoeFactory::getLibrary("USPSd5dbWebSites",$dbSource); 
 	$awds = $WebSites->getAwardsObject();
 	$types = $awds->award_types;
-	$WebSites->close();
 	return $types;
 }
 //**************************************************************************
 static function get_awards($org,$dbSource='local'){
 	$WebSites = JoeFactory::getLibrary("USPSd5dbWebSites",$dbSource); 
 	$awards =  $WebSites->getAwards($org) ;
-	$WebSites->close();
 	return $awards;
 }
 //**************************************************************************
@@ -441,13 +462,11 @@ static function get_conference_events($org,$dbSource='local'){
 	$WebSites = JoeFactory::getLibrary("USPSd5dbWebSites",$dbSource); 
 	$select = "event_type = 'conf'";
 	$events =  $WebSites->getEvents("squad_no='$org'",$select) ;
-	$WebSites->close();
 	return $events;
 }
 //****************************************************************
 static function getDateObj($date = null, $allDay = null, $tz = null){
 	$dateObj = JFactory::getDate($date, $tz);
-
 		$timezone = JFactory::getApplication()->getCfg('offset');
 		$user = JFactory::getUser();
 		if ($user->get('id'))
@@ -458,9 +477,7 @@ static function getDateObj($date = null, $allDay = null, $tz = null){
 				$timezone = $userTimezone;
 			}
 		}
-
 		$timezone = JFactory::getSession()->get('user-timezone', $timezone, 'DPCalendar');
-
 		if (! $allDay)
 		{
 			$dateObj->setTimezone(new DateTimeZone($timezone));
@@ -470,31 +487,29 @@ static function getDateObj($date = null, $allDay = null, $tz = null){
 //**************************************************************************
 static function get_display_year($dbSource='local'){
 	require(JPATH_LIBRARIES."/USPSaccess/dbUSPS.php");
+	$vhqab = JoeFactory::getLibrary("USPSd5tableVHQAB",$dbSource);
 	$WebSites = JoeFactory::getLibrary("USPSd5dbWebSites",$dbSource);
 	$blob = $WebSites->getBlobsObject();
 	$year = $blob->get_display_year();
-	//$blob->close();
 	return $year;
 }
 //**************************************************************************
 static function get_dist_or_squad_conference_events($org,$dbSource='local'){
 	$WebSites = JoeFactory::getLibrary("USPSd5dbWebSites",$dbSource);
-	$select = "event_type = 'conf' or event_type = 'mtg'";
-	$orgs = "squad_no='$org' or squad_no ='6243'";
+	$select = "event_type = 'conf' ";
+	$orgs = "(squad_no='$org' or squad_no ='6243')";
 	$events =  $WebSites->getEvents($orgs,$select,'') ;
-	$WebSites->close();
 	return $events;	
 }
 //**************************************************************************
 static function get_doc_types($dbSource='local'){
 	$WebSites = JoeFactory::getLibrary("USPSd5dbWebSites",$dbSource); 
 	$types = $WebSites->getDocTypes();
-	$WebSites->close();
 	return $types;
 }
 //**************************************************************************
 static function get_ed_awds(){
-	$awd_names = array(	
+	$awd_names = array(
 		"Kenneth Smith Seamanship Award"=>"Kenneth Smith Seamanship Award",
 		"Prince Henry Award"=>"Prince Henry Award",
 		"Caravelle Award"=>"Caravelle Award",
@@ -512,28 +527,26 @@ static function get_event($event_id,$dbSource='local'){
 	$evt = $WebSites->getEvent($event_id,FALSE);
 	$evt['meal_setup_url'] = get_absolute_url(JURI::base()."modules/".$GLOBALS['mod_folder']."/assets/meal_setup_gen.php&event_id=".$evt['event_id']);
 	$evt['meal_setup_modal'] = modeventsHelper::build_meal_setup_modal($evt);
-	$WebSites->close();
 	return $evt;
 }
 //**************************************************************************
 static function get_event_blank($dbSource='local'){
 	$WebSites = JoeFactory::getLibrary("USPSd5dbWebSites",$dbSource); 
 	$blk = $WebSites->get_event_blank();
-	$WebSites->close();
+
 	return $blk;
 }
 //**************************************************************************
 static function get_event_types($dbSource='local'){
 	$WebSites = JoeFactory::getLibrary("USPSd5dbWebSites",$dbSource); 
 	$typs = $WebSites->getEventTypes();
-	$WebSites->close();
 	return $typs;
 }
 //*********************************************************
 static function get_events($org,$dbSource='local'){
+	
 	$WebSites = JoeFactory::getLibrary("USPSd5dbWebSites",$dbSource); 
 	$events =  $WebSites->getEvents("squad_no='$org'","","desc") ;
-	$WebSites->close();
 	return $events;
 }
 //*********************************************************
@@ -548,36 +561,29 @@ static function get_events_list($events){
 static function get_events_having_documents($org,$dbSource='local'){
 	$WebSites = JoeFactory::getLibrary("USPSd5dbWebSites",$dbSource); 
 	$evts = $WebSites->getEventsObject();
-	$blob = $WebSites->getBlobsObject();
-	$blb_name = $blob->table_name;
+	$docs = $WebSites->getDocumentsObject();
 	$evt_name = $evts->table_name;
-	$query = "$evt_name.squad_no=$org and ($blb_name.b_use LIKE 'b_event_document') " ;
-	$join = "INNER JOIN d5_blobs ON events.event_id = $blb_name.item_part_no";
-	$events = $evts->search_with_join($query,'start_date DESC'  , $join);	
+	$doc_name = $docs->table_name;
+	$query = "$evt_name.squad_no=$org" ;
+	$join = "INNER JOIN $doc_name ON events.event_id = $doc_name.event_id";
+	$list = "$evt_name.*";
+	$events = $evts->search_partial_with_join($list,$query,'start_date DESC'  , $join);	
 	$id = '';
+	$list = array();
 	foreach ($events as $event){
 		if ($event['event_id'] != $id){
 			$event['event_name_with_modal'] = modeventsHelper::build_event_modal($event,"document_gen.php");
 			$list[] = $event;
 			$id = $event['event_id'];
 		} else 
-			continue; 
-		
-	}
-	
-	
+			continue; 	
+	}	
 	return $list;
 }
 //*********************************************************
 static function get_events_with_sort($display_by,$dbSource='local'){
 	$WebSites = JoeFactory::getLibrary("USPSd5dbWebSites",$dbSource); 
 	$evts =  $WebSites->getEventsObject() ;
-	
-
-	
-	
-
-
 	$query = $state = $event_name = $squad_no = '';
 	$query .= "course_id != '' and start_date >= curdate() ";
 	$this_year = 0;
@@ -636,14 +642,12 @@ static function get_sec_awds(){
 static function get_future_events($org,$select='',$dbSource='local'){
 	$WebSites = JoeFactory::getLibrary("USPSd5dbWebSites",$dbSource); 
 	$events = $WebSites->getFutureEvents($org,$select);
-	$WebSites->close();
 	return $events;
 }
 //**************************************************************************
 static function get_location($loc_id,$dbSource='local'){
 	$WebSites = JoeFactory::getLibrary("USPSd5dbWebSites",$dbSource); 
 	$loc = $WebSites->getLocation($loc_id);
-	$WebSites->close();
 	return $loc;
 }
 
@@ -651,29 +655,29 @@ static function get_location($loc_id,$dbSource='local'){
 static function get_location_blank($dbSource='local'){
 	$WebSites = JoeFactory::getLibrary("USPSd5dbWebSites",$dbSource); 
 	$blk = $WebSites->get_location_blank();
-	$WebSites->close();
 	return $blk;
 }
 //**************************************************************************
 static function get_location_list($squad_no,$dbSource='local'){
 	$WebSites = JoeFactory::getLibrary("USPSd5dbWebSites",$dbSource); 
 	$locs = $WebSites->getLocationList($squad_no);
-	$WebSites->close();
 	return $locs;
+}
+static function get_member_name($certificate){
+	$vhqab = JoeFactory::getLibrary("USPSd5tableVHQAB");
+	return $vhqab->getMemberNameAndGrade($certificate,TRUE );
 }
 //**************************************************************************
 static function get_members($squad_no,$dbSource='local'){
 	$vhqab = JoeFactory::getLibrary("USPSd5tableVHQAB",$dbSource);
 	$mbrs = $vhqab->getD5MembersObject();
 	$members = $mbrs->get_d5_or_squad_member_list($squad_no);
-	$vhqab->close();
 	return $members;
 }
 //**************************************************************************
 static function get_members_squadron_account($certno,$dbSource='local'){
 	$vhqab = JoeFactory::getLibrary("USPSd5tableVHQAB",$dbSource);
 	$sq = $vhqab->getSquadNumber($certno);
-	$vhqab->close();
 	return $sq;
 }
 //**************************************************************************
@@ -689,7 +693,7 @@ static function get_objects($org,$dbSource='local'){
 //	The types of 
 	$WebSites = JoeFactory::getLibrary("USPSd5dbWebSites",$dbSource);
 	$events = $WebSites->getEventsObject();
-	$blobs = $WebSites->getBlobsObject();
+	$blob = $WebSites->getBlobsObject();
 	$awards = $WebSites->getAwardsObject();
 	//  first find all Plaques, certificates, Memorials, or Charters  records in blobs
 	$st = implode("','",$awards->object_types);
@@ -698,21 +702,21 @@ static function get_objects($org,$dbSource='local'){
 	$list = "d5_awards.*, d5_blobs.* ";
 	$join = "INNER JOIN d5_awards ON d5_awards.award_id = d5_blobs.item_part_no";
 	$order = "d5_awards.award_year DESC";
-	$awds = $blobs->search_partial_with_join($list,$query,$order,$join);
+	
+	//  Must replace with function in appropriate class
+	$awds = $blob->search_partial_with_join($list,$query,$order,$join);
 	//  Use the award_id to obtain the award record and event_record  
 	return $awds ;
 	$list = "d5_blobs.*, EVENTS. *";
 	$join = "INNER JOIN d5_blobs ON events.event_id = d5_blobs.item_part_no";
 	$query = "events.squad_no = '$org' and (d5_blobs.b_use = 'b_event_document' OR d5_blobs.b_use = 'b_award_document')";
 	$evts = $events->search_partial_with_join($list,$query,"events.start_date DESC",$join); 
-	$WebSites->close();	
 	return $evts;
 }
 //**************************************************************************
 static function get_officer_list($squad_no, $year, $dbSource='local'){
 	$vhqab = JoeFactory::getLibrary("USPSd5tableVHQAB",$dbSource);
 	$lst = $vhqab->getSquadronOfficerList($squad_no,$year);
-	$vhqab->close();
 	return $lst;
 }
 //**************************************************************************
@@ -722,7 +726,6 @@ $me = $GLOBALS['me'];
 	$WebSites = JoeFactory::getLibrary("USPSd5dbWebSites",$dbSource);
 	$blob = $WebSites->getBlobsObject();
 	$stack = $blob->get_session_stack($ip,$squad_no,$me);
-	$blob->close();
 	return $stack;
 }
 //*********************************************************
@@ -766,6 +769,8 @@ $loging = $GLOBALS['loging'] ;
 	$events = $WebSites->getFutureEvents($source, $select);	
 	if ($loging) log_it("After getfutureEvents",__LINE__);
 	foreach($events as &$evt){
+		$evt = modeventsHelper::expand_event_record($evt,$dbSource);     
+/*
 		$evt['extras'] = $WebSites->getEventDocuments($evt['event_id']);
 			$evt['poc_full_name'] = '';
 		$evt['telephone'] = '';
@@ -773,46 +778,49 @@ $loging = $GLOBALS['loging'] ;
 		$evt['event_name_with_modal'] = modeventsHelper::build_event_modal($evt,"event_gen.php");
 		$evt['register_modal'] = modeventsHelper::build_register_modal($evt);
 		if ($evt['poc_id'] != ''){
-			$evt['poc_full_name'] = $vhqab->getMemberNameAndRank($evt['poc_id'], true);
+			$evt['poc_full_name'] = $vhqab->getMemberNameAndRank($evt['poc_id'], TRUE);
 			$evt['telephone'] = $vhqab->getMemberPhone($evt['poc_id']);
 		}
 		if ($evt['lead_squadron'] != ''){
 			$evt['lead_squadron_short_name'] = 
-				$vhqab->getSquadronShortName($evt['lead_squadron'],true);
+				$vhqab->getSquadronShortName($evt['lead_squadron'],TRUE);
 		}
 		$evt['date_obj'] = modeventsHelper::getDateObj($evt["start_date"],$dbSource);		
 		$evt['date_str'] = modeventsHelper::build_date_str($evt["start_date"],$evt["end_date"]);
 		$evt['date_rng'] = get_date_range($evt);
 		$evt['date_2ln'] = getDateTime2($evt);
-		$evt['location_name'] = $WebSites->getLocationName($evt['location'],true);
-		$evt['squad_short_name'] =  $vhqab->getSquadronShortName($evt['squad_no'],true);
+		$evt['location_name'] = $WebSites->getLocationName($evt['location'],TRUE);
+		$evt['squad_short_name'] =  $vhqab->getSquadronShortName($evt['squad_no'],TRUE);
 			// create a url parameter find this document 
+*/
 	}
-	$WebSites->close();
-	$vhqab->close();
 	if ($loging) log_it("Before return",__LINE__);
 	return $events;
+}
+//**************************************************************************
+static function get_squadron_display_year($squad_no, $dbSource='local'){
+	require(JPATH_LIBRARIES."/USPSaccess/dbUSPS.php");
+	$vhqab = JoeFactory::getLibrary("USPSd5tableVHQAB",$dbSource);
+	$year = $vhqab->getSquadronDisplayYear($squad_no);
+	return $year;
 }
 //**************************************************************************
 static function get_squadron_list($dbSource='local'){
 	$vhqab = JoeFactory::getLibrary("USPSd5tableVHQAB",$dbSource);
 	$sqds = $vhqab->getSquadronObject();
 	$squadrons = $sqds->get_squadron_list();
-	$vhqab->close();
 	return $squadrons;
 }
 //**************************************************************************
 static function get_squadron_name($org,$dbSource='local'){
 	$vhqab = JoeFactory::getLibrary("USPSd5tableVHQAB",$dbSource);
-	$nm = $vhqab->getSquadronName($org);
-	$vhqab->close();
+	$nm = $vhqab->getSquadronShortName($org);
 	return $nm;
 }
 //**************************************************************************
 static function get_squadron_state($org,$dbSource='local'){
 	$vhqab = JoeFactory::getLibrary("USPSd5tableVHQAB",$dbSource);
 	$state = $vhqab->getSquadronState($org);
-	$vhqab->close();
 	return $state;
 }
 //**************************************************************************
@@ -821,19 +829,225 @@ static function handle_award_name($pst,$setup,$dbSource='local'){
 	$blob = $WebSites->getBlobsObject();
 	switch( strtolower($pst['command']) ){
 		case 'add':
-			$blob->store_award_name($pst['award_name'],$pst['award_org'],$pst['award_type']);
+			if ($pst['org'] != ''){
+				$pst['squad_no'] = $pst['org'];
+			}
+			$blob->store_award_name($pst);
 			break;
 		case 'delete':
 			break;
 		case 'update':
 			break;
 	}
-
-	
 	return ;
-	
-	
-	
+}
+//****************************************************************************
+static function handle_command(&$setup,$dbSource='local'){
+	$WebSites = JoeFactory::getLibrary("USPSd5dbWebSites",$dbSource); 
+	$awds = $WebSites->getAwardsObject();
+	$blob=$WebSites->getBlobsObject();
+	$loging = $GLOBALS['loging'];
+	$me = $GLOBALS['me'];
+	$pst = $_POST;
+	$cmd = strtolower($_POST['command'])." ".$setup['mode'];
+	if ($loging) log_it("Handling $cmd", __LINE__);
+	switch($cmd){
+// New Commands or those being tested 
+		case 'update award_name':
+			modeventsHelper::handle_award_name($pst,$setup,$dbSource);
+			break;
+		case 'delete award_name':
+			modeventsHelper::handle_award_name($pst,$setup,$dbSource);
+			break;
+// Commands to Complete data from a form and downstack (pop) to the previous stack level 			
+		case 'return new_award':
+		case 'return award':
+		case 'return history':
+		case 'return location': 
+		case 'return event':
+			pop($setup); 
+		case 'add event':
+		case 'submit event':
+			$return = modeventsHelper::update_event($dbSource);		// $_POST carries data on event 
+			if ($return != '')
+				$setup['error'] = $return;
+			else 
+//				pop($setup);
+			break;
+		case 'add location':
+		case 'submit location':
+			modeventsHelper::add_or_update_location($dbSource);
+			pop($setup);
+			break;
+		case 'add new_award':
+			modeventsHelper::handle_award_name($pst,$setup,$dbSource);
+			pop($setup);
+		case 'add award':
+			$rec = $awds->addBlankAwardRecord($_POST);
+			$_POST['award_id'] = $rec['award_id'];
+			switch($_POST['award_source']){
+				case 'squadron':
+					$_POST['squad_no'] = $setup['org'];
+					break;
+				case 'district':
+				case 'national':
+				default:
+			}
+			// $_POST['squad_no'] = $_POST['org'];
+		case 'submit award':
+			if (count($_FILES) > 0)
+				foreach($_FILES as $file){
+					if ($file['error'] == 0 and $file['name'] != '' ){
+						$_POST["award_extra"] = $file;
+						break ;
+					}
+				}			
+			$return = modeventsHelper::update_award($setup, $dbSource);
+			if ($return != ''){
+				$WebSites->deleteAward($_POST['award_id']);
+				$setup['error'] = $return;		
+			} else 
+				pop($setup);
+			break;
+		case 'cancel event':
+		case 'cancel award':
+		case 'cancel location':
+			pop($setup);
+// Commands to upstack (push) 
+// Commands to call another form - must pushup 
+		case 'new name award':
+			push('new_award','add',$setup);
+			break;
+		case 'new award':
+			push('award','add',$setup);
+			break;
+		case 'update award':
+		case 'update history':
+			$setup['award_id'] = $_POST['award_id'];
+			if ($setup['mode'] == 'history'){
+				$setup['object'] = $_POST['object'];
+			}
+
+			push($setup['mode'],'update',$setup);
+			break;
+		case 'locations event':
+			push('location','change',$setup);
+			break;
+		case 'new location event':
+		case 'new location';
+			push('location','add',$setup);
+			break;
+		case 'new event':
+			push('event','add',$setup);
+			break;
+		case 'update event':
+			$setup['event_id'] = $_POST['event_id'];
+			push($setup['mode'],'update',$setup);
+			break;
+
+		case 'update location':
+			$setup['location_id'] = $_POST['location_id'];
+			push($setup['mode'],'update',$setup);
+			break;
+		case 'add plaque history':
+		case 'add certificate history':
+		case 'add memorial history':
+		case 'add photograph history':
+		case 'add charter history':
+			if (count($_FILES) > 0){
+				foreach($_FILES as $file){
+					if ($file['error'] == 0 and $file['name'] != '' ){			
+						$_POST["award_extra"] = $file;
+						switch( strtolower( explode(' ',$_POST['command'])[1] ) ){
+							case 'plaque': $typ = 'plk'; break;
+							case 'certificate':	$typ = 'cert'; break;
+							case 'photograph': $typ = 'pic'; break;
+							case 'memorial': $typ='mem'; break;
+							case 'charter': $typ = 'ctr'; break;
+						}			
+						if ($setup['error']=modeventsHelper::add_historical_object($typ,$award_id,$dbSource) == ''){
+							$setup['object'] = explode(' ',$_POST['command'])[1];
+							$setup['award_id'] = $award_id;
+							push($setup['mode'],'update',$setup);
+						}
+					}
+				}
+			}
+			$setup['error'] = "You must supply a Picture (or Document) describing the item! ";
+			break;
+
+
+// Commands that do work but do not change stack level 
+		case 'submit history':
+			// Update the historical event and optionally add a new event 
+			// Determine if a new event is to be added 
+			if ($_POST['new_event_name'] != '' and (	$_POST['new_start_date'] == '' or 
+														$_POST['new_event_type'] == '' )){
+				$setup['error'] = "You must provide name, start date and event type to add a new Squadron Event.";
+				break;	
+			}
+			if (	$_POST['new_event_name'] != '' ){
+				// Create the event
+				$_POST["event_st_dt"] = $_POST['new_start_date'];
+				$_POST['event_type'] = $_POST['new_event_type'];
+				$_POST['event_name'] = $_POST['new_event_name'];
+				$_POST['command'] = 'add';
+				$return = modeventsHelper::update_event($event_id,$dbSource);		// $_POST carries data on event 			
+				$_POST['event_id'] = $event_id;
+				if ($return != '')
+					$setup['error'] = $return;
+				$_POST['command'] = 'submit';	
+			}
+			if (count($_FILES) > 0)
+				foreach($_FILES as $file){
+					if ($file['error'] == 0 and $file['name'] != '' ){
+						$_POST["award_extra"] = $file;
+						break ;
+					}
+				}
+			// Store the new event_id in the award record 
+			// Update the award
+			$return = modeventsHelper::update_award($setup,$dbSource);
+			if ($return != ''){
+				$setup['error'] = $return;
+				// OK - we must setup to repeat the 
+				
+			}
+			// pop($setup);
+			break;				
+		case 'delete event':
+		case 'delete location':
+		case 'delete award':
+		case 'delete history':
+			modeventsHelper::delete_item($dbSource);
+			break;
+		case 'exit event';
+			unset($_SESSION['stack']);
+			$blob->delete_session_stack($org,$_SERVER['REMOTE_ADDR'],$me);
+			echo("We are done!  Use a menu to select the next page. ");
+			exit;
+		case 'exit award';
+			unset($_SESSION['stack']);
+			$blob->delete_session_stack($org,$_SERVER['REMOTE_ADDR'],$me);
+			echo("We are done!  Use a menu to select the next page. ");
+			// header("Location:index.php/d5-members-only");
+			exit;
+		case 'display_by event_sort':
+			//if (isset($_GET['command'])){
+			//	$display_by = $_GET['command'];
+			//} else{
+			//	$display_by = 'date';
+			//}
+			if (isset($_POST['command'])){
+				$display_by = $_POST['value'];
+			}
+			$setup['display_by'] = $_POST['value'];
+			break;
+	}
+	modeventsHelper::update_stack($setup);
+	$link = "$me?org=".$setup['org']."&issetup=0";
+	header("Location:$link");
+	exit(0);		
 }
 //**************************************************************************
 static function handle_file_delete($setup,$dbSource='local'){
@@ -846,7 +1060,6 @@ $me = $GLOBALS['me'];
 		if (substr($key,0,7) != 'delete_') continue;
 		$WebSites->deleteExtraFile($name);
 	}
-	$WebSites->close();
 	$link = "$me?org=".$setup['org'];
 	header("Location:$link");	
 }
@@ -858,7 +1071,6 @@ $me = $GLOBALS['me'];
 	$blob = $WebSites->getBlobsObject();
 	$blob->delete_session_stack($org,$_SERVER['REMOTE_ADDR'],$me);
 	$blob->add_session_stack($org,$_SERVER['REMOTE_ADDR'],$stack,$me,$dbSource);
-//	$blob->close();
 }
 //**************************************************************************
 static function store_session_stack($ip, $org, $stack, $me='',$dbSource='local'){
@@ -867,28 +1079,36 @@ $me = $GLOBALS['me'];
 	$WebSites = JoeFactory::getLibrary("USPSd5dbWebSites",$dbSource);
 	$blob = $WebSites->getBlobsObject();
 	$stack = $blob->store_session_stack($org,$ip,$stack,$me);
-	$blob->close();
 	return $stack;
 }
 //**************************************************************************
-static function update_award($dbSource='local'){
+static function update_award($setup, $dbSource='local'){
 	$WebSites = JoeFactory::getLibrary("USPSd5dbWebSites",$dbSource); 
 	$awds = $WebSites->getAwardsObject();
-	$blobs = $WebSites->getBlobsObject();
-
-	switch($_POST['award_type']){
-		case 'squadron':
-//			$_POST['award_to_squadron'] = $_POST['org'];
-			break;
-		default:
-	}
+	$docs = $WebSites->getDocumentsObject();		
 	if ($_POST['award_name'] == ''){
 			$_POST['award_name'] = $_POST['special_award_name'];
 	}
-	if ($_POST['award_name'] == '')
+	if ($_POST['award_name'] == ''){
 		return "You must provide an Award Name";
+	}
+	if ($_POST['event_id'] == 0 and $_POST['award_source'] == 'district'){
+		return "You must identify the conference for a district award.";
+	}
+	// When updates are done by a squadron member we must adjust to 
+	// identify the squadron.  
+	switch($setup['orgType']){
+		case "mbrsquad":
+			switch($_POST['award_type']){
+				case 'squadron':
+					$_POST['award_to_squadron'] = $_POST['org'];
+					break;
+				default:
+			}
+			break;
+		default:
+	}
 	$awds->update_record_changes('award_id',$_POST);
-
 	if (isset($_POST['award_extra'])){
 		if ($_POST['doc_type'] == ''){
 			return 'You must choose a document type!';
@@ -896,35 +1116,22 @@ static function update_award($dbSource='local'){
 		if ($_POST['doc_type'] == 'spc' and $_POST['doc_special'] == ''){
 			return 'You must specify a special document type!';
 		}
-	// Call File System Routine to store file 
-	$doc_types = $WebSites->getDocTypes(); 
-	if ($_POST['doc_type'] == 'spc'){
-		$type = $_POST['doc_special'];
-	} else {
-		$type = $doc_types[$_POST['doc_type']];
-	}
-	$rel_file_name = storeExtraFile(			
-		$_POST['award_id'],
-		$_POST['award_extra'],	// The $_FILE array
-		$type,
-		$_POST['award_year'],
-		"awards") ;
-	if ($_POST['award_extra']['type'] == "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
-		$_POST['award_extra']['type'] = "application/msword";
-			
-	// Call Blobs Routine to associate file name with award 	
-	$return = $blobs->store_award_document(
+		// Call File System Routine to store file 
+		$doc_types = $WebSites->getDocTypes(); 
+		if ($_POST['doc_type'] == 'spc'){
+			$type = $_POST['doc_special'];
+		} else {
+			$type = $doc_types[$_POST['doc_type']];
+		}
+		$return = $docs->store_award_document(
 			$_POST['award_id'],
-			$rel_file_name,
 			$_POST['award_extra']['type'], //$mime
 			$type,
 			$_POST['award_year'],
 			$_POST['award_extra']);				// Used for file prefix 
-	$WebSites->close();
-	// $vhqab->close();
-	return $return;
-}
+		return $return;
 	}
+}
 //**************************************************************************
 static function update_event($dbSource='local'){
 	$vhqab = JoeFactory::getLibrary("USPSd5tableVHQAB",$dbSource);
@@ -961,8 +1168,6 @@ static function update_event($dbSource='local'){
 	} else{
 		$return = $WebSites->updateEvent($_POST);
 	}
-	$WebSites->close();
-	$vhqab->close();
 	return $return ;
 }
 //**************************************************************************
@@ -975,197 +1180,6 @@ $me = $GLOBALS['me'];
 	$stack[count($stack)-1] = serialize($setup);
 	$_SESSION['stack'] = $stack;	
 	$blob->store_session_stack($setup['org'],$_SERVER['REMOTE_ADDR'],$stack,$me);	
-	$blob->close();
-}
-//****************************************************************************
-static function handle_command(&$setup,$dbSource='local'){
-	$WebSites = JoeFactory::getLibrary("USPSd5dbWebSites",$dbSource); 
-	$awds = $WebSites->getAwardsObject();
-$loging = $GLOBALS['loging'];
-$me = $GLOBALS['me'];
-	$pst = $_POST;
-	$cmd = strtolower($_POST['command'])." ".$setup['mode'];
-	if ($loging) log_it("Handling $cmd", __LINE__);
-	switch($cmd){
-		case 'add award_name':
-			modeventsHelper::handle_award_name($pst,$setup,$dbSource);
-			break;
-		case 'update award_name':
-			modeventsHelper::handle_award_name($pst,$setup,$dbSource);
-			break;
-		case 'delete award_name':
-			modeventsHelper::handle_award_name($pst,$setup,$dbSource);
-			break;
-		case 'return award':
-		case 'return history':
-
-			pop($setup); 
-		case 'meeting award':
-			update_stack($setup);
-			return $setup;
-			break;
-		case 'return event':
-			pop($setup); 
-		case 'meeting event':
-			modeventsHelper::update_stack($setup);
-			return $setup;
-			break;
-		case 'locations event':
-			push('location','change',$setup);
-			break;
-		case 'new location event':
-		case 'new location';
-			push('location','add',$setup);
-			break;
-		case 'new event':
-			push('event','add',$setup);
-			break;
-		case 'add event':
-		case 'submit event':
-			$return = modeventsHelper::update_event($dbSource);		// $_POST carries data on event 
-			if ($return != '')
-				$setup['error'] = $return;
-			break;
-		case 'submit history':
-			// Update the historical event and optionally add a new event 
-			// Determine if a new event is to be added 
-			if ($_POST['new_event_name'] != '' and (	$_POST['new_start_date'] == '' or 
-														$_POST['new_event_type'] == '' )){
-				$setup['error'] = "You must provide name, start date and event type to add a new Squadron Event.";
-				break;	
-			}
-			if (	$_POST['new_event_name'] != '' ){
-				// Create the event
-				$_POST["event_st_dt"] = $_POST['new_start_date'];
-				$_POST['event_type'] = $_POST['new_event_type'];
-				$_POST['event_name'] = $_POST['new_event_name'];
-				$_POST['command'] = 'add';
-				$return = modeventsHelper::update_event($event_id,$dbSource);		// $_POST carries data on event 			
-				$_POST['event_id'] = $event_id;
-				if ($return != '')
-					$setup['error'] = $return;
-				$_POST['command'] = 'submit';	
-			}
-			if (count($_FILES) > 0)
-				foreach($_FILES as $file){
-					if ($file['error'] == 0 and $file['name'] != '' ){
-						$_POST["award_extra"] = $file;
-						break ;
-					}
-				}
-			// Store the new event_id in the award record 
-			// Update the award
-			$return = modeventsHelper::update_award($dbSource);
-			if ($return != '')
-				$setup['error'] = $return;
-			// pop($setup);
-			break;				
-		case 'new award':
-			push('award','add',$setup);
-			break;
-		case 'add award':
-			$rec = $awds->addBlankAwardRecord($_POST);
-			$_POST['award_id'] = $rec['award_id'];
-			// $_POST['squad_no'] = $_POST['org'];
-		case 'submit award':
-			if (count($_FILES) > 0)
-				foreach($_FILES as $file){
-					if ($file['error'] == 0 and $file['name'] != '' ){
-						$_POST["award_extra"] = $file;
-						break ;
-					}
-				}			
-			$return = modeventsHelper::update_award($dbSource);
-			if ($return != '')
-				$setup['error'] = $return;
-			pop($setup);
-			break;
-		case 'add location':
-		case 'submit location':
-			modeventsHelper::add_or_update_location($dbSource);
-			pop($setup);
-			break;
-		case 'update event':
-			$setup['event_id'] = $_POST['event_id'];
-			push($setup['mode'],'update',$setup);
-			break;
-		case 'update award':
-		case 'update history':
-			$setup['award_id'] = $_POST['award_id'];
-			if ($setup['mode'] == 'history'){
-				$setup['object'] = $_POST['object'];
-			}
-
-			push($setup['mode'],'update',$setup);
-			pop($setup);
-			break;
-		case 'update location':
-			$setup['location_id'] = $_POST['location_id'];
-			push($setup['mode'],'update',$setup);
-			break;
-		case 'delete event':
-		case 'delete location':
-		case 'delete award':
-		case 'delete history':
-			modeventsHelper::delete_item($dbSource);
-			break;
-		case 'cancel event':
-		case 'cancel award':
-		case 'cancel location':
-			pop($setup);
-		case 'exit event';
-			unset($_SESSION['stack']);
-			$blob->delete_session_stack($org,$_SERVER['REMOTE_ADDR'],$me);
-			echo("We are done!  Use a menu to select the next page. ");
-			exit;
-		case 'add plaque history':
-		case 'add certificate history':
-		case 'add memorial history':
-		case 'add photograph history':
-		case 'add charter history':
-			if (count($_FILES) > 0){
-				foreach($_FILES as $file){
-					if ($file['error'] == 0 and $file['name'] != '' ){			
-						$_POST["award_extra"] = $file;
-						switch( strtolower( explode(' ',$_POST['command'])[1] ) ){
-							case 'plaque': $typ = 'plk'; break;
-							case 'certificate':	$typ = 'cert'; break;
-							case 'photograph': $typ = 'pic'; break;
-							case 'memorial': $typ='mem'; break;
-							case 'charter': $typ = 'ctr'; break;
-						}			
-						if ($setup['error']=modeventsHelper::add_historical_object($typ,$award_id,$dbSource) == ''){
-							$setup['object'] = explode(' ',$_POST['command'])[1];
-							$setup['award_id'] = $award_id;
-							push($setup['mode'],'update',$setup);
-						}
-					}
-				}
-			}
-			$setup['error'] = "You must supply a Picture (or Document) describing the item! ";
-			break;
-		case 'exit award';
-			unset($_SESSION['stack']);
-			$blob->delete_session_stack($org,$_SERVER['REMOTE_ADDR'],$me);
-			echo("We are done!  Use a menu to select the next page. ");
-			// header("Location:index.php/d5-members-only");
-			exit;
-		case 'display_by event_sort':
-			//if (isset($_GET['command'])){
-			//	$display_by = $_GET['command'];
-			//} else{
-			//	$display_by = 'date';
-			//}
-			if (isset($_POST['command'])){
-				$display_by = $_POST['value'];
-			}
-			$setup['display_by'] = $_POST['value'];
-			break;
-	}
-	modeventsHelper::update_stack($setup);
-	$link = "$me?org=".$setup['org']."&issetup=0";
-	header("Location:$link");
-	exit(0);		
 }
 //**************************************************************************
 
@@ -1198,11 +1212,4 @@ $me = $GLOBALS['me'];
 	header("Location:$link");
 	exit(0);
 }
-//****************************************************************************
-function get_award_id_from_blob_record($rec,&$year,&$award_id){
-		$a_url = explode('/awards/',$rec['title']);
-		$a_url = explode('/',$a_url[1]);
-		$year = $a_url[0];
-		$award_id = explode('_',$a_url[1])[0];
-		return;
-}
+

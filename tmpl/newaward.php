@@ -2,18 +2,23 @@
 //****************************************************************************
 // no direct access
 defined('_JEXEC') or die('Restricted access');
-	// We need an array with all of the expected data fields or we must rewrite showform()
 	if ($loging) log_it("Starting - ",__FILE__);
-	$awd_row = modeventsHelper::get_award_blank();
-	$awd_row['award_name'] = "";
-	$awd_row['award_type'] = "squadron";
-	$awd_row['award_source'] = "district";
-	$awd_row['poc_id'] = $setup['user_id'];
-	$awd_row['squad_no'] = $setup['org'];
-	$awd_row['extras'] = array();
-	$awd_row['award_citation'] = '';
 	showHeader($setup['header'],$me,'',$datepicker);
-?>	
+	if ($setup['error'] != ''){
+?>
+		<h3 style="color:red;font-size:14pt;">	
+			<?php echo $setup['error']; ?>
+		</h3>
+<?php
+		$setup['error'] = '';
+	}
+?>
+<style type="text/css">
+.datepicker {
+	background-color: #fff ;
+	color: #333 ;
+}
+</style>
 	<input type="hidden" name="issetup" value="0" />
 	<input type="hidden" name="org" value="<?php echo $org;?>" />
 	<input type="hidden" name = 'entered_by' value='<?php echo $username;?>' />

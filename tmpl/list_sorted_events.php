@@ -62,7 +62,7 @@ $lst_by = $evts->display_by["$display_by"];
 	$this_year = $event_name = $state = $squad_no = '';
 	foreach ($events as $event){
 		$squadron = $sqds->get_record('squad_no',$event['squad_no']);
-		$squad_name_with_link = $sqds->getSquadronName($event['squad_no'],true);
+		$squad_name_with_link = $vhqab->getSquadronName($event['squad_no'],true);
 		$contact = $mbrs->get_mbr_record($event['poc_id']);
 		$start_date = strtotime($event['start_date']);
 		$end_date = strtotime($event['end_date']);

@@ -13,6 +13,16 @@ defined('_JEXEC') or die('Restricted access');
 	$setup['doc_types'] = modeventsHelper::get_doc_types(); 
 	// Display results
 	showHeader($params->get('heading'),$me,'',$datepicker);
+
+?>
+<style type="text/css">
+.datepicker {
+	background-color: #fff ;
+	color: #333 ;
+}
+</style>
+<?php	
+	$year = modeventsHelper::get_display_year($setup['org']);
 	$setup['contacts'] = modeventsHelper::get_officer_list($setup['org'],$year );
 	$locations = modeventsHelper::get_location_list($org);
 	if ($evt_row['start_date']==""){

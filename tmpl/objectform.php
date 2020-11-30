@@ -13,6 +13,7 @@ defined('_JEXEC') or die('Restricted access');
 //***************************************************************************
 // $events = modeventsHelper::get_dist_or_squad_conference_events($setup['org']);
 // $events_list = modeventsHelper::get_events_list($events);
+	$year = modeventsHelper::get_display_year($setup['org']);
 	$setup['contacts'] = modeventsHelper::get_officer_list($setup['org'],$year );
 	$setup['options'] = modeventsHelper::get_event_types();
 	$setup['doc_types'] = modeventsHelper::get_doc_types();	
@@ -110,13 +111,18 @@ defined('_JEXEC') or die('Restricted access');
 		<td>Picture of <?php if (isset($setup['object'])) echo $setup['object'];?>: </td>
 		<td>
 			<?php 
-				if (! isset($awd_row['extras'][$setup['object']])){
+				$obj = $setup['object'];
+				if (! isset($awd_row['extras'][$obj])){
+//				if (! isset($awd_row['extras'][$setup['object']])){
 					echo "There's an error.  Please report to WEBMASTER";
 				}
 				$pic = $awd_row['extras'][$setup['object']];	
-				list($tp,$path) = each($pic);
+//				list($tp,$path) = each($pic);
+				foreach($pic as $tp=>$path){
+					echo "<img src='".$path."' width='400'>";
+				}
 				?>	
-				<img src='<?php echo $path; ?>' width='400'>
+				<!--<img src='<?php echo $path; ?>' width='400'>-->
 		</td>
 	</tr>
 <!-- Object's Description -->
@@ -160,9 +166,12 @@ defined('_JEXEC') or die('Restricted access');
 				<td>
 					<?php 
 						// $pic = $awd_row['extras'][$setup['object']];	
-						list($tp,$path) = each($pic);
-						?>	
-					<img src='<?php echo $path; ?>' width='400'>
+						// list($tp,$path) = each($pic);
+						foreach($pic as $tp=>$path){
+							echo "<img src='".$path."' width='400'>";
+						}						
+					?>	
+					<!--<img src='<?php echo $path; ?>' width='400'>-->
 				</td>
 			</tr>
 <?php 

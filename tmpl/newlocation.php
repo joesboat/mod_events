@@ -18,12 +18,15 @@ defined('_JEXEC') or die('Restricted access');
 	<input type="hidden" name="issetup" value="0" />
 	<input type="hidden" name="org" value="<?php echo $org;?>" />
 	<h3>Create a New Location</h3>
-	<p>To add a new location fill in the fields below and select 'Add'. </p>
+	<p>To add a new location fill in the fields below and select - Add. </p>
 <?php
 	require(JModuleHelper::getLayoutPath('mod_events','locationform'));	
 ?>
 	<p>
 	<input type='submit' name='command' value='Add' />
+	</p>
+	<p>
+	<input type="submit" name="command" value="Return" />
 	</p>
 <?php
 	showTrailer();

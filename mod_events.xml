@@ -155,6 +155,13 @@
 					label="JFIELD_ALT_LAYOUT_LABEL"
 					description="JFIELD_ALT_MODULE_LAYOUT_DESC" 
 					default="single_line"    />
+				<field
+					name="layout_height"
+					type="text"
+					label="Specifies the pixel height of the events list. As an example - 400px   "
+					description="Provide the number of pixels for the height of the heml block."
+					default = '400px'
+				/>
 				<field 
 					name="heading"
 					type="text" 

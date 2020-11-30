@@ -10,7 +10,7 @@
 
 // no direct access
 defined('_JEXEC') or die('Restricted access');
-	$awd_row = modeventsHelper::get_award_blank();
+	$awd_row = modeventsHelper::get_award_blank($setup);
 	showHeader($setup['header'],$me);
 	$setup['doc_types'] = modeventsHelper::get_doc_types();	
 	$yr = 1965;
@@ -136,7 +136,7 @@ var i = document.createElement("input");
 					name	=	'command' 
 					value	=	"update" 
 					award_id=	"<?php echo $a_row['award_id']; ?>" 
-					object	=	"<?php echo $a_row['b_info'];?>"  
+					object = 	"<?php echo $a_row['b_info']; ?>"
 					onclick	=	"submit_it(this);"
 					class="btn btn-primary btn-sm form-control"
 				>

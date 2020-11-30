@@ -37,15 +37,27 @@ function callModal(url){
 	    text-decoration: none;
 	    color: initial;
 	}	
+#evt_list {
+	/*position:absolute;
+	left:600px;
+	top:80px;
+	
+	*/
+	height:400px;
+	width:250px;
+	overflow:scroll;
+	z-index:8;
+}
 
 </style>
-<table style="width: 100%;" border='1' cellpadding='0'>
+<div id='evt_list' <?php if (isset($layout_height)) echo "style='height:$layout_height;'";?> >
+<table style="width: 100%; " border='1' cellpadding='0'>
 <?php
 	foreach($events as $key=>$evt){
 		//$WebSites = JoeFactory::getLibrary("USPSd5dbWebSites","local");
 		//$evt['extras'] = $WebSites->getEventDocuments($evt['event_id'],true);
 		//$WebSites->close();
-		if ($key > 7) break;
+		//if ($key > 7) break;
 		if (substr($evt['start_date'],0,4) > $year){
 			$year = substr($evt['start_date'],0,4);
 ?>
@@ -78,7 +90,7 @@ function callModal(url){
 					</span>
 				<br>
 					<span class="date">
-						<?php echo $evt['date_str']; ?>
+						<?php echo $evt['date_str'].", ".$evt['time_str']; ?>
 					</span>
 				</div>
 			</td>
@@ -126,3 +138,4 @@ function callModal(url){
 <!--</ul>-->
 <!--</form>-->
 </table>
+</div>

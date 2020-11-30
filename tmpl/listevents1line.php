@@ -27,7 +27,6 @@ $year = 0;
 		$name = $event['event_name_with_link'];
 		$color = $event['color'];
 		$name = $event['event_name_with_modal'];
-		// $squad = $event['squad_short_name'];	
 ?>
 <div itemscope itemtype="http://schema.org/Event">
 	<div style="clear: both;" ></div>

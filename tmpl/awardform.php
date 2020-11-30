@@ -15,24 +15,12 @@ $award_sources = modeventsHelper::get_award_sources();
 $award_types = modeventsHelper::get_award_types();
 $squadrons = modeventsHelper::get_squadron_list();
 $officers = modeventsHelper::get_officer_list($setup['org'],$year );
-if ($setup['org'] == 6243){
-	$sqd = ""; 
-} else {
-	$sqd = $setup['org'];
-}
-$members = modeventsHelper::get_members($sqd);
+$members = modeventsHelper::get_members($setup['org']);
 $members[''] = "Select from List";
-$events = modeventsHelper::get_conference_events(6243);
+$events = modeventsHelper::get_dist_or_squad_conference_events($setup['org']);
 $events_list = modeventsHelper::get_events_list($events);
 $setup['doc_types'] = modeventsHelper::get_doc_types();
-$awd_names = array(	"Kenneth Smith Seamanship Award"=>"Kenneth Smith Seamanship Award",
-					"Prince Henry Award"=>"Prince Henry Award",
-					"Caravelle Award"=>"Caravelle Award",
-					"Henry E. Sweet Award"=>"Henry E. Sweet Excellence Award",
-					"Commanders Trophy Advanced Grades Award"=>"Commanders Trophy Advanced Grades Award",
-					"Commanders Trophy Electives Award"=>"Commanders Trophy Electives Award",
-					"Workboat Award"=>"Workboat Award",
-					""=>"Select a standard award of enter new in textbox!");
+
 $awd_place = array(	""=>"",
 					"- 2nd Place"=>"- 2nd Place",
 					"- 3rd Place"=>"- 3rd Place" );
@@ -81,9 +69,11 @@ $awd_place = array(	""=>"",
 	</tr>
 <!--Event Name-->
 	<tr>
-		<td>Awarded at Conference: </td>
+		<td title="Specify the Conference or Change of Watch where the award was presented. Use one of the district or squadron 'Events' tools if the event is not in this list.">
+			Awarded at Conference or Change of Watch: 
+		</td>
 		<td>
-			<select name='event_id' id='event_id' style="width:300px;">
+			<select name='event_id' id='event_id' style="width:300px;" ">
 <?php
 				show_option_list($events_list,$awd_row['event_id']);
 ?>
@@ -92,15 +82,17 @@ $awd_place = array(	""=>"",
 	</tr>
 <!-- Award Name -->
 	<tr>
-		<td>Standard Award Name:</td>		
+		<td title="Select an award name from this list.  Use the 'New Name' button below to add a Standard Award name to this list. Use the Special Award field below to identify a unique (one time) award. " >
+			Standard Award Name:
+		</td>		
 		<td>
-			<select name='award_name' id='award_name' style="width:400px;">
+			<select name='award_name' id='award_name' style="width:400px;" >
 <?php			
 				show_option_list($awd_names,$awd_row["award_name"]);
 ?>			
 			</select>
 			&nbsp;&nbsp;&nbsp;&nbsp;
-			<select name="award_place" id="award_place" style="width:120px;">
+			<select name="award_place" id="award_place" style="width:120px;" title="Leave blank for 1st place awards." >
 <?php				
 				show_option_list($awd_place,$awd_row['award_place']);
 ?>
@@ -112,8 +104,26 @@ $awd_place = array(	""=>"",
 ?>
 		</td>
 	</tr>
+<?php 
+	if ($next == 'add award'){
+?>
 	<tr>
-		<td>Special Award:</td>		
+		<td title="Suggest you only use this tools to identify awards presented each year.  Otherwise use the Special Award field below. ">
+			New Standard Award		
+		</td>
+		<td>
+			You may use the <input 	type="submit" 
+									name=command 
+									value="New Name"
+									title="Suggest you only use this tools to identify awards presented each year.  Otherwise use the Special Award field below. "
+									 /> tool.  
+		</td>
+	</tr>
+<?php		
+	}
+?>
+	<tr>
+		<td title="Special awards are rare. This field will only be recognized when a Standard Award Name has not been selected.">Special Award:</td>		
 		<td>
 			<input 	type="text" 
 					name="special_award_name" 
@@ -125,7 +135,7 @@ $awd_place = array(	""=>"",
 	</tr>
 <!--Award From-->
 	<tr>
-		<td>Award From: <br/>&nbsp;&nbsp;&nbsp;&nbsp;(Choose from list.)</td>
+		<td title="Most starndard awards are from the district.  Identify the organization level that presented the award. ">Award From: <br/>&nbsp;&nbsp;&nbsp;&nbsp;(Choose from list.)</td>
 		<td>
 			<select name="award_source" >
 			<?php 
@@ -141,7 +151,9 @@ $awd_place = array(	""=>"",
 	</tr>
 <!--Award Type-->
 	<tr>
-		<td>Award Type: <br/>&nbsp;&nbsp;&nbsp;&nbsp;(Choose from list.)</td>
+		<td title="Most district awards are presented to a squadron.  Most squadron awards are presented to a member.">
+			Award Type: <br/>&nbsp;&nbsp;&nbsp;&nbsp;(Choose from list.)
+		</td>
 		<td>
 			<select name="award_type" >
 			<?php 
@@ -176,9 +188,11 @@ $awd_place = array(	""=>"",
 ?>		
 <!-- Award to Member -->
 	<tr>
-		<td>Member Award To:</td>
+		<td title="List should have all members of the district or your squadron.  Missing names should be reported to the orginization's secretary. ">
+			Member Award To:
+		</td>
 		<td>
-			<select name="poc_id" >
+			<select name="award_to_member" title="List should have all members of the district or your squadron.  Missing names should be reported to the orginization's secretary. ">
 				<?php 
 					show_option_list($members, $awd_row['award_to_member']);
 				?>
@@ -189,44 +203,47 @@ $awd_place = array(	""=>"",
 	<tr>
 		<td>Award Citation: </td>
 		<td>
-			<TEXTAREA name='award_citation' rows='3' cols='50' ><?php echo $awd_row['award_citation'];?>
-			</TEXTAREA><br/>
+			<TEXTAREA name='award_citation' rows='3' cols='50' ><?php echo $awd_row['award_citation'];?></TEXTAREA><br/>
 		</td>
 	</tr>
 <!--Award Documents -->
 	<tr>
-		<td>Award Documents:
-			<?php if (count($awd_row['extras']) > 0){ ?>		
-			<br/>&nbsp;&nbsp;&nbsp;&nbsp;
-			Select document and press
-			<br/>&nbsp;&nbsp;&nbsp;&nbsp;
-			<input type="submit" name="delete" value="Delete" />
-			<?php }  ?>
+		<td title="This section displays documents associated with this award.   ">
+			Award Documents:
+<?php 
+			if (count($awd_row['extras']) > 0){
+?>		
+				<br/>&nbsp;&nbsp;&nbsp;&nbsp;
+				Select document and press
+				<br/>&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="submit" name="delete" value="Delete" />
+<?php 
+			}  
+?>
 		</td>
-		<td>
+		<td title="This section displays documents associated with this award."  >
 			<table>
 			<?php 
 				$ct = 0;
 				if (is_array($awd_row['extras'])) 
-					foreach($awd_row['extras'] as $type=>$docs)
-						foreach ($docs as $doc_typ=>$rel_file_name){
+					foreach($awd_row['extras'] as $type=>$doc){
 						$ct ++;
 					?>
 					<tr>
 						<td>
 							<input type="checkbox" 
-									value="<?php echo $rel_file_name;?>" 
+									value="<?php echo $doc;?>" 
 									name="delete_<?php echo $ct; ?>" 
-							/>
+							>
 						</td>
 						<td>
 							<?php echo $type; ?>
 						</td>
 						<td>&nbsp;&nbsp;&nbsp;</td>
 						<td>
-							<?php echo $rel_file_name; ?>
+							<?php echo $doc; ?>
 							<br />
-							<img src='<?php echo $rel_file_name; ?>' width='400'>
+							<img src='<?php echo $doc; ?>' width='400'>
 						</td>
 					</tr>	
 					<?php
@@ -237,8 +254,11 @@ $awd_place = array(	""=>"",
 	</tr>
 <!-- Upload Award Documents -->
 	<tr>
-		<td>Upload Award Documents:</td>
-		<td>Document Type: <br/>
+		<td>
+			Upload Award Documents:
+		</td>
+		<td>
+			Document Type: <br/>
 			<?php foreach($setup['doc_types'] as $key=>$type){  
 				if ($key == 'spc') continue;
 				?>

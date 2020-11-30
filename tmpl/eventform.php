@@ -156,17 +156,10 @@ var subTotalField = document.getElementById("subTotalField1");
 	<tr>
 		<td>Event Description: </td>
 		<td>
-			<TEXTAREA name='event_description' rows='3' cols='50' ><?php echo $evt_row['event_description'];?>
-				
-			</TEXTAREA><br/>
+			<TEXTAREA name='event_description' rows='3' cols='50' ><?php echo $evt_row['event_description'];?></TEXTAREA>
+			<br/>
 		</td>
 	</tr>
-<?php
-	if ($setup['org'] == 6243){
-	$squadrons = modeventsHelper::get_squadron_list();
-	$squadrons['6243'] = "M&R Committee";
-?>
-<!--// Point of Contact-->
 	<tr>
 		<td>EXCOM Member Point of Contact:</td>
 		<td>
@@ -175,6 +168,13 @@ var subTotalField = document.getElementById("subTotalField1");
 			</select>
 		</td>
 	</tr>
+<?php
+	if ($setup['org'] == 6243){
+	$squadrons = modeventsHelper::get_squadron_list();
+	$squadrons['6243'] = "M&R Committee";
+?>
+<!--// Point of Contact-->
+
 <!--Responsible Squadron -->
 	<tr>
 		<td>
@@ -287,7 +287,10 @@ var subTotalField = document.getElementById("subTotalField1");
 					title="Private documents will not be displayed on public pages! ">
 			<br/><br/>
 			<input type='file' name='extra' />
-			<br/><br/>
+						<br/>
+			<input type="submit" name="command" value="Submit" />
+			<br/>
+<br/><br/>
 		</td>
 	</tr>
 <!--Uploaded Documents-->
@@ -304,29 +307,30 @@ var subTotalField = document.getElementById("subTotalField1");
 			<table>
 			<?php 
 				$ct = 0;
-				if (is_array($evt_row['extras'])) foreach($evt_row['extras'] as $type=>$docs)
+				if (is_array($evt_row['extras'])) 
+				foreach($evt_row['extras'] as $type=>$docs)
 					foreach ($docs as $doc_typ=>$rel_file_name){
 						$ct ++;
 					?>
-					<tr>
-						<td>
-							<input type="checkbox" 
-									value="<?php echo $rel_file_name;?>" 
-									name="delete_<?php echo $ct; ?>" 
-							/>
-						</td>
-						<td>
-							<?php echo $type; ?>
-						</td>
-						<td>&nbsp;&nbsp;&nbsp;</td>
-						<td>
-							<a target="_blank" href="<?php echo $rel_file_name; ?>">
-							<?php echo $rel_file_name; ?>
-							</a>
-						</td>
-					</tr>	
-					<?php
-					}	 
+						<tr>
+							<td>
+								<input type="checkbox" 
+										value="<?php echo $rel_file_name;?>" 
+										name="delete_<?php echo $ct; ?>" 
+								/>
+							</td>
+							<td>
+								<?php echo $type; ?>
+							</td>
+							<td>&nbsp;&nbsp;&nbsp;</td>
+							<td>
+								<a target="_blank" href="<?php echo $rel_file_name; ?>">
+								<?php echo $rel_file_name; ?>
+								</a>
+							</td>
+						</tr>	
+						<?php
+						}	 
 			?>
 			</table>
 		</td>

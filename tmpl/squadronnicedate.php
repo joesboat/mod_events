@@ -28,7 +28,7 @@ $year = 0;
 </style>
 <!--Rank, Name, Grade-->
 <h4 class='text-center'><?php echo $params->get('heading'); ?></h4>
-<div id='evt_list'>
+<div id='evt_list' <?php if (isset($layout_height)) echo "style='height:$layout_height;'";?> >
 	<?php
 	foreach($events as $event){
 			$s_date = $event['start_date'];
@@ -69,7 +69,6 @@ $year = 0;
 ?>
 </div>
 <div align="right" >
-	<br />
 	<span style="color:#ff0000;">Training Classes</span>
 	<span style="color:#00ff00;">Meetings</span>
 	<span style="color:#0000ff;">Cruises</span>

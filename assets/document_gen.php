@@ -12,7 +12,6 @@ if ($logging) log_it("event_id = $event_id");
 $evt = $WebSites->getEvent($event_id,TRUE);
 $loc = $WebSites->getLocationData($evt['location_id']);
 $LocationName = $WebSites->getLocationName($loc,true);
-$WebSites->close();
 ?>
 <html>
 <head>

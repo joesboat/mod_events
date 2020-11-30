@@ -82,8 +82,7 @@ defined('_JEXEC') or die('Restricted access');
 			<?php 
 				$ct = 0;
 				if (is_array($award['extras'])) 
-					foreach($award['extras'] as $type=>$docs)
-						foreach ($docs as $doc_typ=>$rel_file_name){
+					foreach($award['extras'] as $type=>$doc){
 						$ct ++;
 					?>
 					<tr>
@@ -94,7 +93,7 @@ defined('_JEXEC') or die('Restricted access');
 						</td>
 						<td>&nbsp;&nbsp;&nbsp;</td>
 						<td>
-							<img src='<?php echo $rel_file_name; ?>' width='400'>
+							<img src='<?php echo $doc; ?>' width='400'>
 						</td>
 					</tr>	
 					<?php
